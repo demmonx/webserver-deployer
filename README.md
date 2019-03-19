@@ -1,4 +1,4 @@
-# Ansible Vagrant profile for a LEMP server
+# Auto-deploy script  for a LEMP server (Ansible / Vagrant profile)
 
 ## Background
 
@@ -22,7 +22,7 @@ Run `./install.sh --name=... --ip=... [--cpu=[1-8] --ram=512(or more)]` in order
 ### Setting up your hosts file
 
 You need to modify your host machine's hosts file to add the new hosts, in order to use ssh. 
-Run `sudo hosts-update.sh` to do that
+Run `sudo ./hosts-update.sh` to do that
 
 After that is configured, you could visit http://{server name}/ in a browser, and you'll see the Nginx 'Welcome to nginx!' page, or your can use run 
 `ssh vargant@server` with password `vargant`

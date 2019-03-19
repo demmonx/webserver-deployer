@@ -19,7 +19,7 @@ function usage()
 {
     echo "How to deploy a VM :"
     echo "./install.sh -h --help"
-    echo "./install.sh -name=... --ip=... [--cpu=nb --ram=nb (mb)]"
+    echo "./install.sh --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
 }
 
 # Verify that CPU is numeric and valid values
@@ -64,7 +64,7 @@ function checkName() {
         exit 1;
     fi
 
-    exist=$(cat "$VBOX" | grep -i -e "$1")
+    exist=$(cat "$VBOX" | grep -i -e " $1$")
     if [[ $exists ]]; then
         echo "VirtualMachine with the same name already exist"
         exit 1;
@@ -141,10 +141,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Update hosts files
-#echo "$ip   $name" > /etc/hosts
-
 echo "$ip" >> "$HOSTS"
-echo "$name" >> "$VBOX"
+echo "$ip     $name" >> "$VBOX"
 
 # Clean config files
 rm "$VAGRANT_FILE"
