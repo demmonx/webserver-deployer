@@ -4,7 +4,7 @@
 
 Vagrant and VirtualBox (or some other VM provider) can be used to quickly build or rebuild virtual servers.
 
-This Vagrant profile installs Nginx, MySQL and PHP (the 'EMP' part of 'LEMP') using the [Ansible](http://www.ansible.com/) provisioner.
+Those scripts use Vagrant profile to deploy a new server and install Nginx, MySQL and PHP (the 'EMP' part of 'LEMP') using the [Ansible](http://www.ansible.com/) provisioner.
 
 ## Getting Started
 
@@ -15,25 +15,23 @@ To use the vagrant file, you will need to have done the following:
   1. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
   3. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
-  4. Open a shell prompt (Terminal app on a Mac) and cd into the folder containing the `Vagrantfile`
-  5. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r requirements.yml`
-
-Once all of that is done, you can simply type in `vagrant up`, and Vagrant will create a new VM, install the base box, and configure it.
-
-Once the new VM is up and running (after `vagrant up` is complete and you're back at the command prompt), you can log into it via SSH if you'd like by typing in `vagrant ssh`. Otherwise, the next steps are below.
+  4. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r requirements.yml`
+  
+Run `./install.sh --name=... --ip=... [--cpu=[1-8] --ram=512(or more)]` in order to directly install the vbox 
 
 ### Setting up your hosts file
 
-You need to modify your host machine's hosts file (Mac/Linux: `/etc/hosts`; Windows: `%systemroot%\system32\drivers\etc\hosts`), adding the line below:
+You need to modify your host machine's hosts file to add the new hosts, in order to use ssh. 
+Run `sudo hosts-update.sh` to do that
 
-    192.168.33.34  lemp
+After that is configured, you could visit http://{server name}/ in a browser, and you'll see the Nginx 'Welcome to nginx!' page, or your can use run 
+`ssh vargant@server` with password `vargant`
 
-(Where `lemp`) is the hostname you have configured in the `Vagrantfile`).
+If you'd like additional assistance editing your hosts file, or do that manually, please read [How do I modify my hosts file?](http://www.rackspace.com/knowledge_center/article/how-do-i-modify-my-hosts-file) from Rackspace.
 
-After that is configured, you could visit http://lemp/ in a browser, and you'll see the Nginx 'Welcome to nginx!' page.
-
-If you'd like additional assistance editing your hosts file, please read [How do I modify my hosts file?](http://www.rackspace.com/knowledge_center/article/how-do-i-modify-my-hosts-file) from Rackspace.
+## Licence
+MIT license
 
 ## Author Information
 
-Created in 2014 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+Based on (https://github.com/geerlingguy/ansible-vagrant-examples) by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
