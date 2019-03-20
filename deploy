@@ -1,22 +1,37 @@
 #!/usr/bin/env bash
 
 install() {
+    shift
     ./install.sh $@
 }
 
 update() {
+    shift
     ./update.sh $@
 }
 
 delete() {
+    shift
     ./delete.sh $@
 }
 
 hosts() {
+    shift
     ./hosts-update.sh $@
 }
 
+run() {
+    shift
+    vboxmanage startvm $@ --type headless
+}
+
+halt() {
+    shift
+    vboxmanage controlvm $@ acpipowerbutton
+}
+
 usage() {
+    shift
     echo "Create a VM : deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
     echo "Update all the VMs : deploy update"
     echo "Delete a VM : deploy remove --name=..."
@@ -32,7 +47,6 @@ fi
 # Filter the first arg
 case $1 in
     add)
-        shift
         install "$@"
         ;;
     update)
@@ -46,6 +60,12 @@ case $1 in
         ;;
     help)
         usage
+         ;;
+    run)
+        run
+         ;;
+    halt)
+        halt
          ;;
     *)
         echo "ERROR: unknown parameter \"$PARAM\""
