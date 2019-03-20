@@ -35,20 +35,25 @@ fi
 touch "$PARSED_FILE"
 parsed=1
 for $line in $(cat $FILE); do
-    # Read the value
+    # Read values
     name=$(echo "$line" | awk -F, '{print $1}')
     ip=$(echo "$line" | awk -F, '{print $2}')
     cpu=$(echo "$line" | awk -F, '{print $3}')
     ram=$(echo "$line" | awk -F, '{print $4}')
 
-    # Check if a field if not empty
-
-    # Generate the result
+    # Generate result
     PARSED_LINE="--name=$name --ip=$ip"
-    PARSED_LINE="$PARSED_LINE --cpu=$cpu"
-    PARSED_LINE="$PARSED_LINE --ram=$ram"
+
+    if [[ $(echo -n "$cpu" | wc -c) -eq 1 ]]; then 
+        PARSED_LINE="$PARSED_LINE --cpu=$cpu"
+    fi
+
+    if [[ $(echo -n "$ram" | wc -c) -ge 1 ]]; then 
+        PARSED_LINE="$PARSED_LINE --ram=$ram"
+    fi
 
     # Store the result
+    echo "$PARSED_LINE" >> "$PARSED_FILE"
 
 done
 
