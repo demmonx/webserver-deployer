@@ -18,7 +18,7 @@ fi
 # Check all the machines
 for name in $@; do
     # Check machine name
-    exist=$(cat "$VBOX" | grep -i -e " $name$")
+    exist=$(cat "$VBOX" | grep -i -e "$name$")
     if [[ !$exists ]]; then
         echo "No VirtualMachine with this name : $name"
         continue

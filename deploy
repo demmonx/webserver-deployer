@@ -2,27 +2,32 @@
 
 install() {
     shift
-    bin/install.sh $@
+    cd bin
+    ./install.sh $@
 }
 
 installMulti() {
     shift
-    bin/install-multiple.sh $@
+    cd bin
+    ./install-multiple.sh $@
 }
 
 update() {
     shift
-    bin/update.sh $@
+    cd bin
+    ./update.sh $@
 }
 
 delete() {
     shift
-    bin/delete.sh $@
+    cd bin
+    ./delete.sh $@
 }
 
 hosts() {
     shift
-    bin/hosts-update.sh $@
+    cd bin
+    ./hosts-update.sh $@
 }
 
 run() {
@@ -70,10 +75,10 @@ case $1 in
         usage
          ;;
     run)
-        run
+        run "$@"
          ;;
     halt)
-        halt
+        halt "$@"
          ;;
     *)
         echo "ERROR: unknown parameter \"$PARAM\""

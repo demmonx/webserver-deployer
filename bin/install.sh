@@ -9,14 +9,15 @@ FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
 HOSTS="$FILES_FOLDER/hosts"
 VBOX="$FILES_FOLDER/box"
 
-VAGRANT_FOLDER="../src/vagrant"
+VAGRANT_FOLDER="src/vagrant"
 VAGRANT_FILE="$VAGRANT_FOLDER/Vagrantfile"
 
-ANSIBLE_FOLDER="../src/ansible"
+ANSIBLE_FOLDER="src/ansible"
 INVENTORY="$ANSIBLE_FOLDER/inventory"
 
 
 # Create files if don't exists
+mkdir -p "$FILES_FOLDER"
 touch "$HOSTS"
 touch "$VBOX"
 
@@ -124,6 +125,8 @@ while [ "$1" != "" ]; do
     shift
 done
 
+cd ..
+
 # Clone files
 cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
 cp "$INVENTORY.base" "$INVENTORY"
@@ -138,6 +141,7 @@ sed -i "s/{NAME}/$name/g"  "$INVENTORY"
 sed -i "s/{IP}/$ip/g"  "$INVENTORY"
 
 # Install and deploy VM
+cd "$VAGRANT_FOLDER"
 vagrant up
 
 # Stop if error
@@ -146,10 +150,12 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+
 # Update hosts files
 echo "$ip" >> "$HOSTS"
 echo "$ip     $name" >> "$VBOX"
 
 # Clean config files
+cd ../..
 rm "$VAGRANT_FILE"
 rm "$INVENTORY"
