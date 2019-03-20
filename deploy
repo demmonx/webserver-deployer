@@ -5,6 +5,11 @@ install() {
     bin/install.sh $@
 }
 
+installMulti() {
+    shift
+    bin/install-multiple.sh $@
+}
+
 update() {
     shift
     bin/update.sh $@
@@ -48,6 +53,9 @@ fi
 case $1 in
     add)
         install "$@"
+        ;;
+    multiple-add)
+        installMulti "$@"
         ;;
     update)
         update "$@"
