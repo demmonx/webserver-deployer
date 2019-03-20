@@ -2,22 +2,22 @@
 
 install() {
     shift
-    ./install.sh $@
+    bin/install.sh $@
 }
 
 update() {
     shift
-    ./update.sh $@
+    bin/update.sh $@
 }
 
 delete() {
     shift
-    ./delete.sh $@
+    bin/delete.sh $@
 }
 
 hosts() {
     shift
-    ./hosts-update.sh $@
+    bin/hosts-update.sh $@
 }
 
 run() {
