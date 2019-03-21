@@ -13,28 +13,28 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Update IFS
-OFIS=$IFS
-IFS=\n
+OIFS=$IFS
+IFS='\n'
 
 # Files creation if isn't exists
 touch "$VBOX"
 touch "$DEL_VBOX"
 
 # Add new vbox to host file
-for box in $(cat "$VBOX"); do
-    name=$(echo "$box" | awk '{print $2}')
-    exists=$(cat "$HOSTS" | grep "$name")
-    if [[ ! $exists ]]; then
-        echo "$box" >> "$HOSTS"
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    name=$(echo "$line" | awk '{print $2}')
+    cat "$HOSTS" | grep "$name$" > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "$line" >> "$HOSTS"
     fi
-done
+done < "$VBOX"
 
 # Remove deleted vbox
-for box in $(cat "$DEL_VBOX"); do
-    name=$(echo "$box" | awk '{print $2}')
-    sed -i "/\s$name$/d" "$HOSTS"
-    sed -i "/\s$name$/d" "$DEL_VBOX"
-done
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    name=$(echo "$line" | awk '{print $1}')
+    sed -i "/$name$/d" "$HOSTS"
+    sed -i "/$name$/d" "$DEL_VBOX"
+done < "$DEL_VBOX"
 
 # Reset IFS
 IFS="$OIFS"

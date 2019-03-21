@@ -37,15 +37,19 @@ run() {
 
 halt() {
     shift
-    vboxmanage controlvm $@ acpipowerbutton
+    vboxmanage controlvm $@ poweroff
 }
 
 usage() {
     shift
-    echo "Create a VM : deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
-    echo "Update all the VMs : deploy update"
-    echo "Delete a VM : deploy remove --name=..."
-    echo "Help : deploy help"
+    echo "deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
+    echo "deploy multiple-add <file>"
+    echo "deploy update"
+    echo "deploy update-hosts"
+    echo "deploy remove --name=..."
+    echo "deploy start <name>"
+    echo "deploy halt <name>"
+    echo "deploy help"
 }
 
 # Check if they are at least 1 param
@@ -74,14 +78,14 @@ case $1 in
     help)
         usage
          ;;
-    run)
+    start)
         run "$@"
          ;;
     halt)
         halt "$@"
          ;;
     *)
-        echo "ERROR: unknown parameter \"$PARAM\""
+        echo "ERROR: unknown parameter \"$1\""
         usage
         exit 1
         ;;

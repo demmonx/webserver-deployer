@@ -18,18 +18,14 @@ fi
 # Check all the machines
 for name in $@; do
     # Check machine name
-    exist=$(cat "$VBOX" | grep -i -e "$name$")
-    if [[ !$exists ]]; then
+    cat "$VBOX" | grep -i -e "$name$"  > /dev/null
+    if [[ $? -ne 0 ]]; then
         echo "No VirtualMachine with this name : $name"
         continue
     fi
 
     # Halt virtual machine
-    vagrant destroy "$name"
-    if [[ $? -ne 0 ]]; then
-        echo "Error halting : $name"
-        continue
-    fi 
+    vboxmanage controlvm "$name" shutdown 2> /dev/null
 
     # Remove VM
     vboxmanage unregistervm --delete "$name"

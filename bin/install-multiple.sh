@@ -5,10 +5,9 @@ usage() {
 
 }
 
-
 # Update IFS
-OFIS=$IFS
-IFS=\n
+OIFS=$IFS
+IFS=''
 
 # Check params number
 if [[ $# -ne 1 ]]; then # Error, no args provided
@@ -19,7 +18,7 @@ fi
 # Check if it's a file
 FILE="$1"
 PARSED_FILE="$FILE.parsed"
-if [ ! -f "$FILE" ]; then
+if [[ ! -f "$FILE" ]]; then
     echo "File not found!"
     exit 1
 fi
@@ -34,7 +33,7 @@ fi
 # Parse file
 touch "$PARSED_FILE"
 parsed=1
-for $line in $(cat $FILE); do
+while IFS='' read -r line || [[ -n "$line" ]]; do
     # Read values
     name=$(echo "$line" | awk -F, '{print $1}')
     ip=$(echo "$line" | awk -F, '{print $2}')
@@ -55,13 +54,15 @@ for $line in $(cat $FILE); do
     # Store the result
     echo "$PARSED_LINE" >> "$PARSED_FILE"
 
-done
+done < "$FILE"
 
 # Run parsed file
 if [[ $parsed -ne 0 ]]; then 
-    for $line in $(cat $PARSED_FILE); do
-        ./install.sh $line  
-    done
+    while IFS='' read -r line || [[ -n "$line" ]]; do
+        ./install.sh "$line" &
+    done < "$PARSED_FILE"
+else
+    echo "ERROR : Unable to parse file"
 fi
 
 # Remove parsed file
