@@ -5,12 +5,19 @@ ram=512
 cpu=1
 
 # Constant
-VAGRANT_FILE=Vagrantfile
-INVENTORY=provisioning/inventory
-HOSTS=hosts
-VBOX=vbox
+FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
+HOSTS="$FILES_FOLDER/hosts"
+VBOX="$FILES_FOLDER/box"
+
+VAGRANT_FOLDER="src/vagrant"
+VAGRANT_FILE="$VAGRANT_FOLDER/Vagrantfile"
+
+ANSIBLE_FOLDER="src/ansible"
+INVENTORY="$ANSIBLE_FOLDER/inventory"
+
 
 # Create files if don't exists
+mkdir -p "$FILES_FOLDER"
 touch "$HOSTS"
 touch "$VBOX"
 
@@ -25,7 +32,7 @@ function usage()
 # Verify that CPU is numeric and valid values
 function checkCPU()
 {
-    isValid=$(echo "$1" | grep '^[1-8]$')
+    echo "$1" | grep '^[1-8]$'  > /dev/null
     if [[ ! $isValid ]]; then
         echo "CPU must be between 1 and 8 (--cpu=1)"
         exit 1;
@@ -34,8 +41,8 @@ function checkCPU()
 
 # Verify that the ram is numeric and enough
 function checkRAM() {
-    isValid=$(echo "$1" | grep '^[0-9]\{3,\}$')
-    if [[ ! $isValid || $1 -le 511  ]]; then
+    echo "$1" | grep '^[0-9]\{3,\}$'  > /dev/null
+    if [[ $? -ne 0 || $1 -le 511  ]]; then
         echo "RAM must be at least 512mb (--ram=512)"
         exit 1;
     fi
@@ -43,14 +50,14 @@ function checkRAM() {
 
 # Verify if the ip looks correct and not used
 function checkIP() {
-    isValid=$(echo "$1" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)')
-    if [[ ! $isValid ]]; then
+    echo "$1" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)'  > /dev/null
+    if [[ $? -ne 0 ]]; then
         echo "Isn't a valid IPV4"
         exit 1;
     fi
 
-    exists=$(cat "$HOSTS" | grep -i -e "$1")
-    if [[ $exists ]]; then
+    cat "$HOSTS" | grep -i -e "$1"  > /dev/null
+    if [[ $? -eq 0 ]]; then
         echo "VirtualMachine with the same IP already exist"
         exit 1;
     fi
@@ -58,14 +65,14 @@ function checkIP() {
 
 # Verify the name of the virtualbox (correct and not used)
 function checkName() {
-    isValid=$(echo "$1" | grep "^[a-zA-Z]\{4,\}$" )
-    if [[ ! $isValid ]]; then
+    echo "$1" | grep "^[a-zA-Z]\{4,\}$"   > /dev/null
+    if [[ $? -ne 0 ]]; then
         echo "Virtual Machine name must be composed with only [a-zA-Z] chars (min length : 4)"
         exit 1;
     fi
 
-    exist=$(cat "$VBOX" | grep -i -e " $1$")
-    if [[ $exists ]]; then
+    cat "$VBOX" | grep -i -e " $1$"  > /dev/null
+    if [[ $? -eq 0 ]]; then
         echo "VirtualMachine with the same name already exist"
         exit 1;
     fi
@@ -81,9 +88,11 @@ elif [[ $# -eq 1 && ( $1 == "--help" || $1 == "-h") ]]; then # Help asked
 fi
 
 # At least the name and the ip are provided
-nameExist=$(echo $@ | grep -i -e '--name=')
-ipExist=$(echo $@ | grep -i -e '--ip=')
-if [[ ! $nameExist || ! $ipExist ]]; then
+echo $@ | grep -i -e '--name=' > /dev/null
+nameExist=$?
+echo $@ | grep -i -e '--ip=' > /dev/null
+ipExist=$?
+if [[ $nameExist -ne 0 || $ipExist -ne 0 ]]; then
     usage
     exit 1;
 fi
@@ -118,6 +127,8 @@ while [ "$1" != "" ]; do
     shift
 done
 
+cd ..
+
 # Clone files
 cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
 cp "$INVENTORY.base" "$INVENTORY"
@@ -132,6 +143,7 @@ sed -i "s/{NAME}/$name/g"  "$INVENTORY"
 sed -i "s/{IP}/$ip/g"  "$INVENTORY"
 
 # Install and deploy VM
+cd "$VAGRANT_FOLDER"
 vagrant up
 
 # Stop if error
@@ -140,10 +152,12 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+
 # Update hosts files
 echo "$ip" >> "$HOSTS"
 echo "$ip     $name" >> "$VBOX"
 
 # Clean config files
+cd ../..
 rm "$VAGRANT_FILE"
 rm "$INVENTORY"

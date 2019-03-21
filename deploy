@@ -1,26 +1,55 @@
 #!/usr/bin/env bash
 
 install() {
+    shift
+    cd bin
     ./install.sh $@
 }
 
+installMulti() {
+    shift
+    cd bin
+    ./install-multiple.sh $@
+}
+
 update() {
+    shift
+    cd bin
     ./update.sh $@
 }
 
 delete() {
+    shift
+    cd bin
     ./delete.sh $@
 }
 
 hosts() {
+    shift
+    cd bin
     ./hosts-update.sh $@
 }
 
+run() {
+    shift
+    vboxmanage startvm $@ --type headless
+}
+
+halt() {
+    shift
+    vboxmanage controlvm $@ poweroff
+}
+
 usage() {
-    echo "Create a VM : deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
-    echo "Update all the VMs : deploy update"
-    echo "Delete a VM : deploy remove --name=..."
-    echo "Help : deploy help"
+    shift
+    echo "deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
+    echo "deploy multiple-add <file>"
+    echo "deploy update"
+    echo "deploy update-hosts"
+    echo "deploy remove --name=..."
+    echo "deploy start <name>"
+    echo "deploy halt <name>"
+    echo "deploy help"
 }
 
 # Check if they are at least 1 param
@@ -32,8 +61,10 @@ fi
 # Filter the first arg
 case $1 in
     add)
-        shift
         install "$@"
+        ;;
+    multiple-add)
+        installMulti "$@"
         ;;
     update)
         update "$@"
@@ -47,8 +78,14 @@ case $1 in
     help)
         usage
          ;;
+    start)
+        run "$@"
+         ;;
+    halt)
+        halt "$@"
+         ;;
     *)
-        echo "ERROR: unknown parameter \"$PARAM\""
+        echo "ERROR: unknown parameter \"$1\""
         usage
         exit 1
         ;;
