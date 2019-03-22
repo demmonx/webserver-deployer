@@ -40,7 +40,7 @@ case  in
     start)
         lemp-manager-start "$@" ;;
     stop)
-        lemp-manager-stop "$@"";;
+        lemp-manager-stop "$@";;
     *)
         echo "ERROR: unknown parameter \"$1\""
         usage
