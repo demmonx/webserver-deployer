@@ -62,7 +62,7 @@ done < "$FILE"
 # Run parsed file
 if [[ $parsed -ne 0 ]]; then 
     while IFS='' read -r line || [[ -n "$line" ]]; do
-        ./install.sh "$line" &
+        lemp-manager deploy "$line" &
     done < "$PARSED_FILE"
 else
     echo "ERROR : Unable to parse file"

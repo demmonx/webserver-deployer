@@ -3,52 +3,14 @@
 # Variable definitions
 . .env
 
-# Sub-modules calls
-install() {
-    shift
-    lemp-manager-install $@
-}
-
-installMulti() {
-    shift
-    lemp-manger-install-multiple $@
-}
-
-update() {
-    shift
-    lemp-manager-update $@
-}
-
-delete() {
-    shift
-    lemp-manager-delete $@
-}
-
-hosts() {
-    shift
-    lemp-manager-hosts-update $@
-}
-
-run() {
-    shift
-    # TODO check param and loop over it
-    vboxmanage startvm $@ --type headless
-}
-
-halt() {
-    shift
-    # TODO check param and loop over it
-    vboxmanage controlvm $@ poweroff
-}
-
 usage() {
     shift
     echo "lemp-manager deploy --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
     echo "lemp-manager deploy-multiple <file>"
     echo "lemp-manager update"
-    echo "lemp-manager remove --name=..."
-    echo "lemp-manager start <name>"
-    echo "lemp-manager halt <name>"
+    echo "lemp-manager remove <name1> [<name2> ...]"
+    echo "lemp-manager start <name1> [<name2> ...]"
+    echo "lemp-manager stop <name1> [<name2> ...]"
     echo "lemp-manager help"
     echo "\$ lemp-manager update-hosts"
 }
@@ -60,31 +22,25 @@ if [[ $# -eq 0 ]]; then # Error, no args provided
 fi
 
 # Filter the first arg
-case $1 in
+PARAM=$1
+shift
+case  in
     deploy)
-        install "$@"
-        ;;
+        lemp-manager-deploy "$@";;
     deploy-multiple)
-        installMulti "$@"
-        ;;
+        lemp-manager-deploy-multiple "$@";;
     update)
-        update "$@"
-        ;;
+        lemp-manager-update "$@";;
     remove)
-        delete "$@"
-        ;;
+        lemp-manager-delete "$@";;
     update-hosts)
-        hosts "$@"
-        ;;
+        lemp-manager-hosts-update "$@";;
     help)
-        usage
-         ;;
+        usage;;
     start)
-        run "$@"
-         ;;
-    halt)
-        halt "$@"
-         ;;
+        lemp-manager-start "$@" ;;
+    stop)
+        lemp-manager-stop "$@"";;
     *)
         echo "ERROR: unknown parameter \"$1\""
         usage

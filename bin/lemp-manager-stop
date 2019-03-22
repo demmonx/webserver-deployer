@@ -4,7 +4,7 @@
 . .env
 
 usage() {
-    echo "lemp-manager-delete <name1> [<name2> ...]"
+    echo "lemp-manager-stop <name1> [<name2> ...]"
 }
 
 # Check there is at least 1 PM
@@ -18,23 +18,16 @@ for name in $@; do
     # Check machine name
     cat "$VBOX" | grep -i -e "$name$"  > /dev/null
     if [[ $? -ne 0 ]]; then
-        echo "$name : No VirtualMachine with this name "
+        echo " $name : No VirtualMachine with this name"
         continue
     fi
 
     # Halt virtual machine
-    lemp-manager stop "$name" > /dev/null
-
-    # Remove VM
-    vboxmanage unregistervm --delete "$name"
+    vboxmanage controlvm "$name" poweroff 2> /dev/null
     if [[ $? -ne 0 ]]; then
-        echo "$name : Error"
-        continue
-    else
-        echo "$name : Removed"
+        echo "$name : Not running"
+    else 
+        echo "$name : Halted"
     fi
 
-    # Remove machine from active hosts
-    sed -i "/\s$name$/d" "$VBOX"
-    echo "$name" >> "$DEL_VBOX"
 done

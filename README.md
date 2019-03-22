@@ -30,15 +30,17 @@ This install a new VM :
 `lemp-manager deploy --name=... --ip=... [--cpu=[1-8] --ram=512(or more)]` to install a VM with custom RAM size or/and vCPU number
 `lemp-manager deploy --help` to show help
 
-### Deploy new VMs from file
+### Deploy new VMs from file - NYI
 Configure a file with values separated by comma (name,ip,cpu,ram) - cpu or ram can be empty - and then run :
 `lemp-manager deploy-multiple <file>`
 
+Not yet tested
+
 ### Halt VM
-`lemp-manager halt <name>`
+`lemp-manager stop <name1> [<name2> ...]`
 
 ### Start VM
-`lemp-manager start <name>`
+`lemp-manager start <name1> [<name2> ...]`
 
 ### Update installed VM  - NYT
 Update all the running VMs using ansible
@@ -56,7 +58,7 @@ You need to be root in order to run this command :
 
 ### Delete VMs 
 You could delete on or more VMs using : 
-`lemp-manager-delete vbox1 [vbox2 ....]`
+`lemp-manager-delete <name1> [<name2> ...]`
 The VMs are stopped (if they are running) and next deleted from disk. They are removed from list of active VM (cannot update after delete) and added to list of removed host (they should be remove on `/etc/hosts` after next `lemp-manager update-hosts`)
 
 ## Licence
