@@ -1,4 +1,4 @@
-# PHP conf
+---
 php_webserver_daemon: nginx
 php_enable_php_fpm: true
 php_enablerepo: remi
@@ -19,63 +19,7 @@ php_packages:
   - php-xmlrpc
   - php-fpm
 
-# MYSQL conf
-mysql_root_password: {MYSQL_ROOT_PASSWD}
-mysql_databases:
-  - name: {MYSQL_DB}
-
-mysql_users: 
-  - name: {MYSQL_USER}
-    password: {MYSQL_PASSWD}
-    encrypted: true
-    priv: "{MYSQL_DB}.*:ALL"
-
-mysql_user_name: {MYSQL_USER}
-mysql_user_password: {MYSQL_PASSWD}
+mysql_root_password: root
 mysql_enablerepo: remi
-mysql_enabled_on_startup: true
-# END MYSQL conf
 
-# NGINX conf
 nginx_worker_connections: 1024
-nginx_user: "nginx"
-# NGINX conf
-
-# POSTFIX conf
-postfix__maincf:
-
-  - name: 'smtp_sasl_auth_enable'
-    value: True
-
-  - name: 'smtp_tls_security_level'
-    value: 'encrypt'
-
-  - name: 'smtp_sasl_tls_security_options'
-    value: 'noanonymous'
-
-  - name: 'relayhost'
-    value: '[{SMTP_HOST}]'
-
-  - name: 'smtp_sasl_password_maps'
-    value: [ 'hash:${config_directory}/smtp_sasl_password_maps' ]
-
-# END POSTFIX conf
-
-# GIT Deployment
----
-- name: Clone repo inside web directory
-  shell: git clone {GIT_REPO}
-  args:
-    chdir: /var/www/
-
-- name: Clone repo inside web directory
-  shell: cp -r "*-master/*" ../html
-  args:
-    chdir: /var/www/
-
-- name: Change access right
-  shell: chmod -R 755 html; chgrp -R nginx:nginx html
-  args:
-    chdir: /var/www/
-  become: yes
-# END GIT Deployment

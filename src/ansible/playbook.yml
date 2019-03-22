@@ -16,7 +16,3 @@
     - geerlingguy.mysql
     - geerlingguy.nginx
     - geerlingguy.php
-    - geerlingguy.adminer
-    - geerlingguy.php-mysql
-    - geerlingguy.git
-    - debops.postfix
