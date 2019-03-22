@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. .env
+
+# Get the list with status
+file="/temp/vblist"
+vboxmanage list vms --long | grep -e "Name:" -e "State:" | grep -v -e 'Host path:' > "$file"
+
+# Generate str containing lemp vbox
+str=''
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    name=$(echo "$line" | awk '{print $2}')
+    str="$str\|$name"
+done < "$VBOX"
+str=${str:2}
+
+# Filter to remove useless data
+sed -ie "/$str/,+1d" "$file"
+sed -i '/State/a --------------\n'  "$file"
+sed -ire "s/\(since(.*)\)//"  "$file"
+
+# Show the output
+cat "$file"
+
+# Remove temporary file
+rm "$file"

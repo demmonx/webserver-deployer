@@ -48,8 +48,11 @@ Update all the running VMs using ansible
 
 Not yet tested
 
-### List existing VM (with status) - NYI
-Not yet implemented
+### List existing VM - NYT
+Show all lemp servers with status (running / off)
+`lemp-manager list`
+
+Not yet test
 
 ### Update hosts file (root only)
 Update /etc/hosts to match existing VM and delete old VMs, in order to access them by using http://{server name}/ instead of http://{ip}/, same for SSH (password = `vargant`)

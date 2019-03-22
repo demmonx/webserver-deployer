@@ -11,6 +11,7 @@ usage() {
     echo "lemp-manager remove <name1> [<name2> ...]"
     echo "lemp-manager start <name1> [<name2> ...]"
     echo "lemp-manager stop <name1> [<name2> ...]"
+    echo "lemp-manager list"
     echo "lemp-manager help"
     echo "\$ lemp-manager update-hosts"
 }
@@ -41,6 +42,8 @@ case  in
         lemp-manager-start "$@" ;;
     stop)
         lemp-manager-stop "$@";;
+    list)
+        lemp-manager-list "$@";;
     *)
         echo "ERROR: unknown parameter \"$1\""
         usage
