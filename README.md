@@ -16,18 +16,48 @@ To use the vagrant file, you will need to have done the following:
   2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
   3. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
   4. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r src/ansible/requirements.yml`
-  
-Run `./install.sh --name=... --ip=... [--cpu=[1-8] --ram=512(or more)]` in order to directly install the vbox 
+  5. Run `./install.sh` ti install `lemp-manager`, files are placed into `$HOME/.lemp-manager.d/`
 
-### Setting up your hosts file
+  Now, you can run `lemp-manager` directly using the CLI
 
-You need to modify your host machine's hosts file to add the new hosts, in order to use ssh. 
-Run `sudo ./hosts-update.sh` to do that
+## CLI interface
 
-After that is configured, you could visit http://{server name}/ in a browser, and you'll see the Nginx 'Welcome to nginx!' page, or your can use run 
-`ssh vargant@server` with password `vargant`
+You can run directly `lemp-manager` or use modules `lemp-manager-<module>`, tape `lemp-manager help` to show availables commands.
 
-If you'd like additional assistance editing your hosts file, or do that manually, please read [How do I modify my hosts file?](http://www.rackspace.com/knowledge_center/article/how-do-i-modify-my-hosts-file) from Rackspace.
+### Deploy new VM
+This install a new VM : 
+`lemp-manager deploy --name=... --ip=...` to install a base VM
+`lemp-manager deploy --name=... --ip=... [--cpu=[1-8] --ram=512(or more)]` to install a VM with custom RAM size or/and vCPU number
+`lemp-manager deploy --help` to show help
+
+### Deploy new VMs from file
+Configure a file with values separated by comma (name,ip,cpu,ram) - cpu or ram can be empty - and then run :
+`lemp-manager deploy-multiple <file>`
+
+### Halt VM
+`lemp-manager halt <name>`
+
+### Start VM
+`lemp-manager start <name>`
+
+### Update installed VM  - NYT
+Update all the running VMs using ansible
+`lemp-manager update`
+
+Not yet tested
+
+### List existing VM (with status) - NYI
+Not yet implemented
+
+### Update hosts file (root only)
+Update /etc/hosts to match existing VM and delete old VMs, in order to access them by using http://{server name}/ instead of http://{ip}/, same for SSH (password = `vargant`)
+You need to be root in order to run this command : 
+`lemp-manager update-hosts`
+
+### Delete VMs 
+You could delete on or more VMs using : 
+`lemp-manager-delete vbox1 [vbox2 ....]`
+The VMs are stopped (if they are running) and next deleted from disk. They are removed from list of active VM (cannot update after delete) and added to list of removed host (they should be remove on `/etc/hosts` after next `lemp-manager update-hosts`)
 
 ## Licence
 MIT license

@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-# FILES
-HOSTS="/etc/hosts"
-FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
-VBOX="$FILES_FOLDER/box"
-DEL_VBOX="$FILES_FOLDER/del_vbox"
+# Variable definitions
+. .env
 
 # Check if user is root or no
 if [ "$EUID" -ne 0 ]
