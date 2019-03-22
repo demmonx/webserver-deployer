@@ -30,8 +30,6 @@ mysql_users:
     encrypted: true
     priv: "{MYSQL_DB}.*:ALL"
 
-mysql_user_name: {MYSQL_USER}
-mysql_user_password: {MYSQL_PASSWD}
 mysql_enablerepo: remi
 mysql_enabled_on_startup: true
 # END MYSQL conf
@@ -79,3 +77,5 @@ postfix__maincf:
     chdir: /var/www/
   become: yes
 # END GIT Deployment
+
+sed -re "s/GIT(.*)END//" test

@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. .env
+
+# Default values
+DEFAULT_RAM=512
+DEFAULT_CPU=1
+
+# Parse variables from yaml (see examples , machine:\nip:value => machine_ip=value)
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
+
+# Verify that CPU is numeric and valid values
+function checkCPU()
+{
+    echo "$1" | grep '^[1-8]$'  > /dev/null
+    if [[ ! $isValid ]]; then
+        echo "CPU must be between 1 and 8 (--cpu=1)"
+        exit 1;
+    fi
+ }
+
+# Verify that the ram is numeric and enough
+function checkRAM() {
+    echo "$1" | grep '^[0-9]\{3,\}$'  > /dev/null
+    if [[ $? -ne 0 || $1 -le 511  ]]; then
+        echo "RAM must be at least 512mb (--ram=512)"
+        exit 1;
+    fi
+ }
+
+# Verify if the ip looks correct and not used
+function checkIP() {
+    echo "$1" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)'  > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "Isn't a valid IPV4"
+        exit 1;
+    fi
+
+    cat "$HOSTS" | grep -i -e "$1"  > /dev/null
+    if [[ $? -eq 0 ]]; then
+        echo "VirtualMachine with the same IP already exist"
+        exit 1;
+    fi
+ }
+
+# Verify the name of the virtualbox (correct and not used)
+function checkName() {
+    echo "$1" | grep "^[a-zA-Z]\{4,\}$"   > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "Virtual Machine name must be composed with only [a-zA-Z] chars (min length : 4)"
+        exit 1;
+    fi
+
+    cat "$VBOX" | grep -i -e " $1$"  > /dev/null
+    if [[ $? -eq 0 ]]; then
+        echo "VirtualMachine with the same name already exist"
+        exit 1;
+    fi
+ }
+
+# Check if machine settings are correct or no
+ function validateMachine() {
+   # Name 
+   if [ ! -v $machine_name ]; then
+      echo "Machine name must be defined"
+      exit 1
+   else
+      checkName "$machine_name"
+   fi
+
+   # IP
+   if [ ! -v $machine_ip ]; then
+      echo "Machine ip must be set"
+      exit 1
+   else
+      checkIP "$machine_ip"
+   fi
+
+   # CPU
+   if [ ! -v $machine_cpu ]; then
+      export machine_cpu=$DEFAULT_CPU
+   else
+      checkCPU "$machine_cpu"
+   fi
+
+   # RAM
+   if [ ! -v $machine_ram ]; then
+      export machine_ram=$DEFAULT_RAM
+   else
+      checkRAM "$machine_ram"
+   fi
+
+   echo "Machine config parsed successfully"
+ }
+
+# Check git param and remove section is something is missing
+function validateGIT() {
+   if [ ! -v $git_repo ]; then
+      echo "WARNING : GIT not parsed"
+   else
+      echo "GIT config parsed successfully"
+   fi
+}
+
+# Check mysql param and remove section is something is missing
+function validateMySQL() {
+   if [ ! -v $mysql_db ] || [ ! -v $mysql_passwd ] || [ ! -v $mysql_root_passwd ] || [ ! -v $mysql_user ]; then
+      echo "WARNING : MySQL not parsed"
+   else
+      echo "MySQL config parsed successfully"
+   fi
+}
+
+# Check smtp param and remove section is something is missing
+function validateSMTP() {
+   if [ ! -v $smtp_host ] || [ ! -v $smtp_user ] || [ ! -v $smtp_pass ]; then
+      echo "WARNING : SMTP not parsed"
+      # sed -re "s/GIT(.*)END//" test ### TODO DEBUG
+   else
+      echo "SMTP config parsed successfully"
+   fi
+}
+
+ ############## SCRIPT START HERE
+
+# Parse variables from input file
+eval $(parse_yaml "$1")
+
+# Check machine
+validateMachine
+
+# Clone files
+cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
+cp "$INVENTORY.base" "$INVENTORY"
+cp "$ANSIBLE_VARS.base" "$ANSIBLE_VARS"
+
+# Check smtp
+validateSMTP
+
+# Check mysql
+validateMySQL
+
+# Check git
+validateGIT
+
+# Apply config - Vagrant file
+sed -i "s/{NAME}/$machine_name/g"  "$VAGRANT_FILE"
+sed -i "s/{RAM}/$machine_ram/g"  "$VAGRANT_FILE"
+sed -i "s/{CPU}/$machine_cpu/g"  "$VAGRANT_FILE"
+sed -i "s/{IP}/$machine_ip/g"  "$VAGRANT_FILE"
+
+# Apply config - Inventory
+sed -i "s/{NAME}/$machine_name/g"  "$INVENTORY"
+sed -i "s/{IP}/$machine_ip/g"  "$INVENTORY"
+sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$INVENTORY"
+
+# Apply config - Vars (Ansible)
+sed -i "s/{GIT_REPO}/$git_repo/g"  "$ANSIBLE_VARS"
+sed -i "s/{MYSQL_ROOT_PASSWD}/$mysql_root_passwd/g"  "$ANSIBLE_VARS"
+sed -i "s/{MYSQL_DB}/$mysql_db/g"  "$ANSIBLE_VARS"
+sed -i "s/{MYSQL_USER}/$mysql_user/g"  "$ANSIBLE_VARS"
+sed -i "s/{MYSQL_PASSWD}/$mysql_passwd/g"  "$ANSIBLE_VARS"
+
+# Apply config - Postfix pass (Ansible)
+sed -i "s/{SMTP_USER}/$smtp_user/g"  "$ANSIBLE_SMTP_SECRET"
+sed -i "s/{SMTP_PASSWD}/$smtp_pass/g"  "$ANSIBLE_SMTP_SECRET"

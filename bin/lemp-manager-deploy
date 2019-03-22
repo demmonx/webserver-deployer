@@ -3,10 +3,6 @@
 # Variable definitions
 . .env
 
-# Default values
-ram=512
-cpu=1
-
 # Create files if don't exists
 mkdir -p "$FILES_FOLDER"
 touch "$HOSTS"
@@ -16,120 +12,24 @@ touch "$VBOX"
 function usage()
 {
     echo "How to deploy a VM :"
-    echo "lemp-manager-install -h --help"
-    echo "lemp-manager-install --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
+    echo "lemp-manager-install help"
+    echo "lemp-manager-install <conf.yml>"
 }
 
-# Verify that CPU is numeric and valid values
-function checkCPU()
-{
-    echo "$1" | grep '^[1-8]$'  > /dev/null
-    if [[ ! $isValid ]]; then
-        echo "CPU must be between 1 and 8 (--cpu=1)"
-        exit 1;
-    fi
- }
-
-# Verify that the ram is numeric and enough
-function checkRAM() {
-    echo "$1" | grep '^[0-9]\{3,\}$'  > /dev/null
-    if [[ $? -ne 0 || $1 -le 511  ]]; then
-        echo "RAM must be at least 512mb (--ram=512)"
-        exit 1;
-    fi
- }
-
-# Verify if the ip looks correct and not used
-function checkIP() {
-    echo "$1" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)'  > /dev/null
-    if [[ $? -ne 0 ]]; then
-        echo "Isn't a valid IPV4"
-        exit 1;
-    fi
-
-    cat "$HOSTS" | grep -i -e "$1"  > /dev/null
-    if [[ $? -eq 0 ]]; then
-        echo "VirtualMachine with the same IP already exist"
-        exit 1;
-    fi
- }
-
-# Verify the name of the virtualbox (correct and not used)
-function checkName() {
-    echo "$1" | grep "^[a-zA-Z]\{4,\}$"   > /dev/null
-    if [[ $? -ne 0 ]]; then
-        echo "Virtual Machine name must be composed with only [a-zA-Z] chars (min length : 4)"
-        exit 1;
-    fi
-
-    cat "$VBOX" | grep -i -e " $1$"  > /dev/null
-    if [[ $? -eq 0 ]]; then
-        echo "VirtualMachine with the same name already exist"
-        exit 1;
-    fi
- }
-
 # Parse command line
-if [[ $# -eq 0 ]]; then # Error, no args provided
-    usage
-    exit 1
-elif [[ $# -eq 1 && ( $1 == "--help" || $1 == "-h") ]]; then # Help asked
+if [[ $# -eq 1 && $1 == "help" ]]; then # Help asked
     usage
     exit 0
-fi
-
-# At least the name and the ip are provided
-echo $@ | grep -i -e '--name=' > /dev/null
-nameExist=$?
-echo $@ | grep -i -e '--ip=' > /dev/null
-ipExist=$?
-if [[ $nameExist -ne 0 || $ipExist -ne 0 ]]; then
+elif [[ $# -eq 1 ]]; then
+    # ok // TODO check if it's yaml
+    echo "" > /dev/null
+else # Error, no args provided, or too many
     usage
-    exit 1;
-fi
+    exit 1
+fi 
 
-# Match param with value and check format (to be done)
-while [ "$1" != "" ]; do
-    PARAM=`echo $1 | awk -F= '{print $1}'`
-    VALUE=`echo $1 | awk -F= '{print $2}'`
-    case $PARAM in
-        --cpu)
-            checkCPU "$VALUE"
-            cpu="$VALUE"
-            ;;
-        --ram)
-            checkRAM "$VALUE"
-            ram="$VALUE"
-            ;;
-        --name)
-            checkName "$VALUE"
-            name="$VALUE"
-            ;;
-        --ip)
-            checkIP "$VALUE"
-            ip="$VALUE"
-            ;;
-        *)
-            echo "ERROR: unknown parameter \"$PARAM\""
-            usage
-            exit 1
-            ;;
-    esac
-    shift
-done
-
-# Clone files
-cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
-cp "$INVENTORY.base" "$INVENTORY"
-
-# Apply config
-sed -i "s/{NAME}/$name/g"  "$VAGRANT_FILE"
-sed -i "s/{RAM}/$ram/g"  "$VAGRANT_FILE"
-sed -i "s/{CPU}/$cpu/g"  "$VAGRANT_FILE"
-sed -i "s/{IP}/$ip/g"  "$VAGRANT_FILE"
-
-sed -i "s/{NAME}/$name/g"  "$INVENTORY"
-sed -i "s/{IP}/$ip/g"  "$INVENTORY"
+# Generate conf
+generate-conf
 
 # Install and deploy VM
 cd "$VAGRANT_FOLDER"
@@ -141,7 +41,6 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-
 # Update hosts files
 echo "$ip" >> "$HOSTS"
 echo "$ip     $name" >> "$VBOX"
@@ -149,3 +48,5 @@ echo "$ip     $name" >> "$VBOX"
 # Clean config files
 rm "$VAGRANT_FILE"
 rm "$INVENTORY"
+rm "$ANSIBLE_VARS"
+echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
