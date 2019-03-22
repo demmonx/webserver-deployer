@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# Variable definitions
-. .env
+# FILES
+FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
+VBOX="$FILES_FOLDER/box"
+DEL_VBOX="$FILES_FOLDER/del_vbox"
 
 usage() {
-    echo "lemp-manager-delete vbox1 [vbox2 ....]"
+    echo "delete.sh vbox1 [vbox2 ....]"
 }
 
 # Check there is at least 1 PM

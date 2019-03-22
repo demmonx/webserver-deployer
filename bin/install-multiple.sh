@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# Variable definitions
-. .env
-
 # HELP
 usage() {
-    echo "lemp-manager-install-multiple <file>"
+
 }
 
 # Update IFS

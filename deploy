@@ -1,56 +1,55 @@
 #!/usr/bin/env bash
 
-# Variable definitions
-. .env
-
-# Sub-modules calls
 install() {
     shift
-    lemp-manager-install $@
+    cd bin
+    ./install.sh $@
 }
 
 installMulti() {
     shift
-    lemp-manger-install-multiple $@
+    cd bin
+    ./install-multiple.sh $@
 }
 
 update() {
     shift
-    lemp-manager-update $@
+    cd bin
+    ./update.sh $@
 }
 
 delete() {
     shift
-    lemp-manager-delete $@
+    cd bin
+    ./delete.sh $@
 }
 
 hosts() {
     shift
-    lemp-manager-hosts-update $@
+    cd bin
+    ./hosts-update.sh $@
 }
 
 run() {
     shift
-    # TODO check param and loop over it
     vboxmanage startvm $@ --type headless
 }
 
 halt() {
     shift
-    # TODO check param and loop over it
     vboxmanage controlvm $@ poweroff
 }
 
 usage() {
     shift
-    echo "lemp-manager deploy --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
-    echo "lemp-manager deploy-multiple <file>"
-    echo "lemp-manager update"
-    echo "lemp-manager remove --name=..."
-    echo "lemp-manager start <name>"
-    echo "lemp-manager halt <name>"
-    echo "lemp-manager help"
-    echo "\$ lemp-manager update-hosts"
+    echo "deploy add --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
+    echo "deploy multiple-add <file>"
+    echo "deploy update"
+    echo "deploy update-hosts"
+    echo "deploy remove --name=..."
+    echo "deploy start <name>"
+    echo "deploy halt <name>"
+    echo "deploy help"
 }
 
 # Check if they are at least 1 param
@@ -61,10 +60,10 @@ fi
 
 # Filter the first arg
 case $1 in
-    deploy)
+    add)
         install "$@"
         ;;
-    deploy-multiple)
+    multiple-add)
         installMulti "$@"
         ;;
     update)
