@@ -45,7 +45,7 @@ for name in $@; do
 
     # Install and deploy VM
     cd "$VAGRANT_FOLDER"
-    vagrant up
+    #vagrant up
 
     # Stop if error
     if [[ $? -ne 0 ]]; then
@@ -56,11 +56,12 @@ for name in $@; do
         echo "$machine_ip" >> "$HOSTS_LOCAL"
         echo "$machine_ip     $machine_name" >> "$VBOX"
     fi
+    exit 1
 
     # Clean config files
     rm "$VAGRANT_FILE"
     rm "$INVENTORY"
     rm "$ANSIBLE_VARS"
-    rm -rf "$TMP/*"
+    rm "$TMP/parsed"
     echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
 done
