@@ -157,8 +157,8 @@ function checkFile () {
 checkFile "$1"
 
 # Parse variables from input file
-parse_yaml "$1" > "$ROOT/tmp/parsed"
-eval $(cat "$ROOT/tmp/parsed")
+parse_yaml "$1" > "$TMP/parsed"
+eval $(cat "$TMP/parsed")
 
 # Check machine
 validateMachine

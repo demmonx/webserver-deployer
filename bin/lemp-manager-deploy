@@ -41,7 +41,7 @@ for name in $@; do
     fi
 
     # Load conf
-    eval $(cat "$ROOT/tmp/parsed")
+    eval $(cat "$TMP/parsed")
 
     # Install and deploy VM
     cd "$VAGRANT_FOLDER"
@@ -61,6 +61,6 @@ for name in $@; do
     rm "$VAGRANT_FILE"
     rm "$INVENTORY"
     rm "$ANSIBLE_VARS"
-    rm -rf "$ROOT/tmp/*"
+    rm -rf "$TMP/*"
     echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
 done
