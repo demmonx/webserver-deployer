@@ -16,7 +16,8 @@ To use the vagrant file, you will need to have done the following:
   2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
   3. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
   4. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r src/ansible/requirements.yml`
-  5. Run `./install.sh` ti install `lemp-manager`, files are placed into `$HOME/.lemp-manager.d/`
+  5. Run `./install.sh` to install `lemp-manager`, files are placed into `$HOME/.lemp-manager.d/`
+  6. Run `source $HOME/.bashrc` to make the commands available globally
 
 ## CLI interface
 

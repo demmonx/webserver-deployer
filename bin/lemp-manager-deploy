@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Variable definitions
-. .env
+. {ENV_LOCATION}
 
 # Create files if don't exists
 mkdir -p "$FILES_FOLDER"

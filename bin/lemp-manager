@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
 # Variable definitions
-. .env
+. {ENV_LOCATION}
 
 usage() {
     shift
-    echo "lemp-manager deploy --name=... --ip=... [--cpu=nb --ram=nb (mb)]"
-    echo "lemp-manager deploy-multiple <file>"
+    echo "lemp-manager deploy <vm1.yml> [<vm2.yml> ...]"
     echo "lemp-manager update"
     echo "lemp-manager remove <name1> [<name2> ...]"
     echo "lemp-manager start <name1> [<name2> ...]"
@@ -25,7 +24,7 @@ fi
 # Filter the first arg
 PARAM=$1
 shift
-case  in
+case $PARAM in
     deploy)
         lemp-manager-deploy "$@";;
     update)

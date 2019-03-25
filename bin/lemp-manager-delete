@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Variable definitions
-. .env
+. {ENV_LOCATION}
 
 usage() {
     echo "lemp-manager-delete <name1> [<name2> ...]"

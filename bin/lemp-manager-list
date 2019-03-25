@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Variable definitions
-. .env
+. {ENV_LOCATION}
 
 # Get the list with status
 file="/temp/vblist"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Variable definitions
-. .env
+. {ENV_LOCATION}
 
 # Process
 ansible-playbook "$ANSIBLE_FOLDER/playbook.yml" -i "$VBOX"
