@@ -15,7 +15,13 @@ mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc" "$ROOT/tmp"
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
-cp bin/lemp-manager* "$ROOT/bin"
+cp bin/* "$ROOT/bin"
+
+# Copy src to /etc/lemp-manager
+cp -r src/* "$ROOT/etc/"
+
+# Edit filenames
+cd "$ROOT/bin"
 for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
 mv "$MODULE_NAME-main" "$MODULE_NAME"
 
@@ -24,9 +30,6 @@ for file in "$ROOT/bin/"*; do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
 done
-
-# Copy src to /etc/lemp-manager
-cp -r src/* "$ROOT/etc/"
 
 # Edit vagrant file to set ansible files correctly
 sed -i "s@{ANSIBLE_FOLDER}@$ANSIBLE_FOLDER@" "$VAGRANT_FILE.base"
