@@ -28,22 +28,20 @@ shift
 case  in
     deploy)
         lemp-manager-deploy "$@";;
-    deploy-multiple)
-        lemp-manager-deploy-multiple "$@";;
     update)
         lemp-manager-update "$@";;
     remove)
         lemp-manager-delete "$@";;
     update-hosts)
         lemp-manager-hosts-update "$@";;
-    help)
-        usage;;
     start)
         lemp-manager-start "$@" ;;
     stop)
         lemp-manager-stop "$@";;
     list)
         lemp-manager-list "$@";;
+    help)
+        usage;;
     *)
         echo "ERROR: unknown parameter \"$1\""
         usage
