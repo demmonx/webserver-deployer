@@ -14,12 +14,15 @@ mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc" "$ROOT/tmp"
 # Copy env to ROOT
 cp .env "$ROOT"
 
-# Copy <bin> to ROOT
+# Copy <bin> to ROOT, and prefix with module name
 cp bin/lemp-manager* "$ROOT/bin"
+for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
+mv "$MODULE_NAME-main" "$MODULE_NAME"
 
 # Edit script to place env correctly
 for file in "$ROOT/bin/"*; do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
+    sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
 done
 
 # Copy src to /etc/lemp-manager

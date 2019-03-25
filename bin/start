@@ -4,7 +4,7 @@
 . {ENV_LOCATION}
 
 usage() {
-    echo "lemp-manager-start <name1> [<name2> ...]"
+    echo "{MODULE_NAME}-start <name1> [<name2> ...]"
 }
 
 # Check there is at least 1 PM

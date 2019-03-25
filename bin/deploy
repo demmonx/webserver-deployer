@@ -12,8 +12,8 @@ touch "$VBOX"
 function usage()
 {
     echo "How to deploy a VM :"
-    echo "lemp-manager-install help"
-    echo "lemp-manager-install <vm1.yml> [<vm2.yml> ...]"
+    echo "{MODULE_NAME}-install help"
+    echo "{MODULE_NAME}-install <vm1.yml> [<vm2.yml> ...]"
 }
 
 # Parse command line
@@ -32,7 +32,7 @@ fi
 # Iterate over params
 for name in $@; do
     # Generate conf
-    lemp-manager-parse-conf "$1"
+    {MODULE_NAME}-parse-conf "$1"
 
     # Skip vm if the file cannot be parsed
     if [[ $? -ne 0 ]]; then
