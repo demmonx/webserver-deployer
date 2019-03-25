@@ -24,7 +24,7 @@ fi
 # Filter the first arg
 PARAM=$1
 shift
-case $PARAM in
+case "$PARAM" in
     deploy)
         lemp-manager-deploy "$@";;
     update)
@@ -42,7 +42,7 @@ case $PARAM in
     help)
         usage;;
     *)
-        echo "ERROR: unknown parameter \"$1\""
+        echo "ERROR: unknown parameter \"$PARAM\""
         usage
         exit 1
         ;;

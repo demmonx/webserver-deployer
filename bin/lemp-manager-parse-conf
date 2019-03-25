@@ -28,8 +28,8 @@ function parse_yaml {
 # Verify that CPU is numeric and valid values
 function checkCPU()
 {
-    echo "$1" | grep '^[1-8]$'  > /dev/null
-    if [[ ! $isValid ]]; then
+    echo "$machine_cpu" | grep '^[1-8]$'  > /dev/null
+    if [[ $? -ne 0 ]]; then
         echo "CPU must be between 1 and 8 (--cpu=1)"
         exit 1;
     fi
@@ -37,8 +37,8 @@ function checkCPU()
 
 # Verify that the ram is numeric and enough
 function checkRAM() {
-    echo "$1" | grep '^[0-9]\{3,\}$'  > /dev/null
-    if [[ $? -ne 0 || $1 -le 511  ]]; then
+    echo "$machine_ram" | grep '^[0-9]\{3,\}$'  > /dev/null
+    if [[ $? -ne 0 || $machine_ram -le 511  ]]; then
         echo "RAM must be at least 512mb (--ram=512)"
         exit 1;
     fi
@@ -46,13 +46,13 @@ function checkRAM() {
 
 # Verify if the ip looks correct and not used
 function checkIP() {
-    echo "$1" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)'  > /dev/null
+    echo "$machine_ip" | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)'  > /dev/null
     if [[ $? -ne 0 ]]; then
         echo "Isn't a valid IPV4"
         exit 1;
     fi
 
-    cat "$HOSTS" | grep -i -e "$1"  > /dev/null
+    cat "$HOSTS" | grep -i -e "$machine_ip"  > /dev/null
     if [[ $? -eq 0 ]]; then
         echo "VirtualMachine with the same IP already exist"
         exit 1;
@@ -61,13 +61,13 @@ function checkIP() {
 
 # Verify the name of the virtualbox (correct and not used)
 function checkName() {
-    echo "$1" | grep "^[a-zA-Z]\{4,\}$"   > /dev/null
+    echo "$machine_name" | grep "^[a-zA-Z]\{4,\}$"   > /dev/null
     if [[ $? -ne 0 ]]; then
         echo "Virtual Machine name must be composed with only [a-zA-Z] chars (min length : 4)"
         exit 1;
     fi
 
-    cat "$VBOX" | grep -i -e " $1$"  > /dev/null
+    cat "$VBOX" | grep -i -e " $machine_name$"  > /dev/null
     if [[ $? -eq 0 ]]; then
         echo "VirtualMachine with the same name already exist"
         exit 1;
@@ -77,15 +77,18 @@ function checkName() {
 # Check if machine settings are correct or no
  function validateMachine() {
    # Name 
-   if [ ! -v $machine_name ]; then
+   if [ -z $machine_name ]; then
       echo "Machine name must be defined"
       exit 1
    else
       checkName "$machine_name"
    fi
 
+   # Show recap
+   echo "----------- $machine_name -------------"
+
    # IP
-   if [ ! -v $machine_ip ]; then
+   if [ -z $machine_ip ]; then
       echo "Machine ip must be set"
       exit 1
    else
@@ -93,14 +96,14 @@ function checkName() {
    fi
 
    # CPU
-   if [ ! -v $machine_cpu ]; then
+   if [ -z $machine_cpu ]; then
       export machine_cpu=$DEFAULT_CPU
    else
       checkCPU "$machine_cpu"
    fi
 
    # RAM
-   if [ ! -v $machine_ram ]; then
+   if [ -z $machine_ram ]; then
       export machine_ram=$DEFAULT_RAM
    else
       checkRAM "$machine_ram"
@@ -111,7 +114,7 @@ function checkName() {
 
 # Check git param and remove section is something is missing
 function validateGIT() {
-   if [ ! -v $git_repo ]; then
+   if [ -z $git_repo ]; then
       echo "WARNING : GIT not parsed"
       sed -ire '/GIT/,/END GIT/d' "$ANSIBLE_VARS"
    else
@@ -121,7 +124,7 @@ function validateGIT() {
 
 # Check mysql param and remove section is something is missing
 function validateMySQL() {
-   if [ ! -v $mysql_db ] || [ ! -v $mysql_passwd ] || [ ! -v $mysql_root_passwd ] || [ ! -v $mysql_user ]; then
+   if [ -z $mysql_db ] || [ -z $mysql_passwd ] || [ -z $mysql_root_passwd ] || [ -z $mysql_user ]; then
       echo "WARNING : MySQL not parsed"
       sed -ire '/MYSQL/,/END MYSQL/d' "$ANSIBLE_VARS"
    else
@@ -131,7 +134,7 @@ function validateMySQL() {
 
 # Check smtp param and remove section is something is missing
 function validateSMTP() {
-   if [ ! -v $smtp_host ] || [ ! -v $smtp_user ] || [ ! -v $smtp_pass ]; then
+   if [ -z $smtp_host ] || [ -z $smtp_user ] || [ -z $smtp_pass ]; then
       echo "WARNING : SMTP not parsed"
       sed -ire '/SMTP/,/END SMTP/d' "$ANSIBLE_VARS"
    else
@@ -154,7 +157,8 @@ function checkFile () {
 checkFile "$1"
 
 # Parse variables from input file
-eval $(parse_yaml "$1")
+parse_yaml "$1" > "$ROOT/tmp/parsed"
+eval $(cat "$ROOT/tmp/parsed")
 
 # Check machine
 validateMachine
@@ -185,11 +189,12 @@ sed -i "s/{IP}/$machine_ip/g"  "$INVENTORY"
 sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$INVENTORY"
 
 # Apply config - Vars (Ansible)
-sed -i "s/{GIT_REPO}/$git_repo/g"  "$ANSIBLE_VARS"
+sed -i "s#{GIT_REPO}#$git_repo#g"  "$ANSIBLE_VARS"
 sed -i "s/{MYSQL_ROOT_PASSWD}/$mysql_root_passwd/g"  "$ANSIBLE_VARS"
 sed -i "s/{MYSQL_DB}/$mysql_db/g"  "$ANSIBLE_VARS"
 sed -i "s/{MYSQL_USER}/$mysql_user/g"  "$ANSIBLE_VARS"
 sed -i "s/{MYSQL_PASSWD}/$mysql_passwd/g"  "$ANSIBLE_VARS"
+sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_VARS"
 
 # Apply config - Postfix pass (Ansible)
 sed -i "s/{SMTP_USER}/$smtp_user/g"  "$ANSIBLE_SMTP_SECRET"

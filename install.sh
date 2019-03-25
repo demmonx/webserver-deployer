@@ -3,14 +3,13 @@
 
 # Base folder
 . .env
-ROOT="$FILES_FOLDER"
 
 # Remove previous install
 rm -r "$ROOT"
 sed "/$MODULE_NAME/d" "$HOME/.bashrc"
 
 # Create root folders
-mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc"
+mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc" "$ROOT/tmp"
 
 # Copy env to ROOT
 cp .env "$ROOT"
@@ -19,8 +18,8 @@ cp .env "$ROOT"
 cp bin/lemp-manager* "$ROOT/bin"
 
 # Edit script to place env correctly
-for file in "$ROOT/bin"; do
-    sed -i "s#{ENV_LOCATION}#$ROOT/.env#/" "$file"
+for file in "$ROOT/bin/"*; do
+    sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
 done
 
 # Copy src to /etc/lemp-manager

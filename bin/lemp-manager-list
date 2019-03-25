@@ -4,7 +4,7 @@
 . {ENV_LOCATION}
 
 # Get the list with status
-file="/temp/vblist"
+file="$ROOT/tmp/vblist"
 vboxmanage list vms --long | grep -e "Name:" -e "State:" | grep -v -e 'Host path:' > "$file"
 
 # Generate str containing lemp vbox

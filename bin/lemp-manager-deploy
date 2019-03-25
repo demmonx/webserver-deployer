@@ -4,7 +4,7 @@
 . {ENV_LOCATION}
 
 # Create files if don't exists
-mkdir -p "$FILES_FOLDER"
+mkdir -p "$ROOT"
 touch "$HOSTS"
 touch "$VBOX"
 
@@ -32,7 +32,7 @@ fi
 # Iterate over params
 for name in $@; do
     # Generate conf
-    parse-conf "$1"
+    lemp-manager-parse-conf "$1"
 
     # Skip vm if the file cannot be parsed
     if [[ $? -ne 0 ]]; then
@@ -40,23 +40,27 @@ for name in $@; do
         continue
     fi
 
+    # Load conf
+    eval $(cat "$ROOT/tmp/parsed")
+
     # Install and deploy VM
     cd "$VAGRANT_FOLDER"
     vagrant up
 
     # Stop if error
     if [[ $? -ne 0 ]]; then
-        echo "Aborted"
-        exit 1
+        echo "ABORTED"
+    else
+        echo "SUCCESS"
+        # Update hosts files
+        echo "$machine_ip" >> "$HOSTS"
+        echo "$machine_ip     $machine_name" >> "$VBOX"
     fi
-
-    # Update hosts files
-    echo "$ip" >> "$HOSTS"
-    echo "$ip     $name" >> "$VBOX"
 
     # Clean config files
     rm "$VAGRANT_FILE"
     rm "$INVENTORY"
     rm "$ANSIBLE_VARS"
+    rm -rf "$ROOT/tmp/*"
     echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
 done
