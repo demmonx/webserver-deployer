@@ -13,14 +13,14 @@ function usage()
 {
     echo "How to deploy a VM :"
     echo "lemp-manager-install help"
-    echo "lemp-manager-install <conf.yml>"
+    echo "lemp-manager-install <vm1.yml> [<vm2.yml> ...]"
 }
 
 # Parse command line
 if [[ $# -eq 1 && $1 == "help" ]]; then # Help asked
     usage
     exit 0
-elif [[ $# -eq 1 ]]; then
+elif [[ $# -ge 1 ]]; then
     # ok // TODO check if it's yaml
     echo "" > /dev/null
 else # Error, no args provided, or too many
@@ -28,25 +28,35 @@ else # Error, no args provided, or too many
     exit 1
 fi 
 
-# Generate conf
-generate-conf
 
-# Install and deploy VM
-cd "$VAGRANT_FOLDER"
-vagrant up
+# Iterate over params
+for name in $@; do
+    # Generate conf
+    parse-conf "$1"
 
-# Stop if error
-if [[ $? -ne 0 ]]; then
-    echo "Aborted"
-    exit 1
-fi
+    # Skip vm if the file cannot be parsed
+    if [[ $? -ne 0 ]]; then
+        echo "Skipped"
+        continue
+    fi
 
-# Update hosts files
-echo "$ip" >> "$HOSTS"
-echo "$ip     $name" >> "$VBOX"
+    # Install and deploy VM
+    cd "$VAGRANT_FOLDER"
+    vagrant up
 
-# Clean config files
-rm "$VAGRANT_FILE"
-rm "$INVENTORY"
-rm "$ANSIBLE_VARS"
-echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
+    # Stop if error
+    if [[ $? -ne 0 ]]; then
+        echo "Aborted"
+        exit 1
+    fi
+
+    # Update hosts files
+    echo "$ip" >> "$HOSTS"
+    echo "$ip     $name" >> "$VBOX"
+
+    # Clean config files
+    rm "$VAGRANT_FILE"
+    rm "$INVENTORY"
+    rm "$ANSIBLE_VARS"
+    echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
+done

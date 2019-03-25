@@ -139,7 +139,19 @@ function validateSMTP() {
    fi
 }
 
- ############## SCRIPT START HERE
+# Check if config file exist
+function checkFile () {
+   if [ ! -f "$1" ]; then
+      echo "$1 : File not found!".
+      echo "Aborted"
+      exit 2
+   fi
+}
+
+############## SCRIPT START HERE
+
+# Check if file exists
+checkFile "$1"
 
 # Parse variables from input file
 eval $(parse_yaml "$1")
