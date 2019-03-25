@@ -39,7 +39,7 @@ VM config **must be described in a yml file**. As least IP and name should be se
 Next run : `lemp-manager deploy <file1> [<file2> ...]`
 
 ### Update hosts file (root only)
-Update /etc/hosts to match existing VM and delete old VMs, in order to access them by using http://{server name}/ instead of http://{ip}/, same for SSH (password = `vargant`)
+Update `/etc/hosts` to match existing VM and delete old VMs, in order to access them by using `http://{server name}/` instead of `http://{ip}/`wl, same for SSH (password = `vargant`)
 You need to be root in order to run this command : 
 `lemp-manager update-hosts`
 
@@ -49,7 +49,7 @@ You could delete on or more VMs using :
 The VMs are stopped (if they are running) and next deleted from disk. They are removed from list of active VM (cannot update after delete) and added to list of removed host (they should be remove on `/etc/hosts` after next `lemp-manager update-hosts`)
 
 ## Examples
-See `examples` folder to see all
+See `example` folder to see all
 ### Machine configuration
 ```
 machine:
