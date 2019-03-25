@@ -113,6 +113,7 @@ function checkName() {
 function validateGIT() {
    if [ ! -v $git_repo ]; then
       echo "WARNING : GIT not parsed"
+      sed -ire '/GIT/,/END GIT/d' "$ANSIBLE_VARS"
    else
       echo "GIT config parsed successfully"
    fi
@@ -122,6 +123,7 @@ function validateGIT() {
 function validateMySQL() {
    if [ ! -v $mysql_db ] || [ ! -v $mysql_passwd ] || [ ! -v $mysql_root_passwd ] || [ ! -v $mysql_user ]; then
       echo "WARNING : MySQL not parsed"
+      sed -ire '/MYSQL/,/END MYSQL/d' "$ANSIBLE_VARS"
    else
       echo "MySQL config parsed successfully"
    fi
@@ -131,7 +133,7 @@ function validateMySQL() {
 function validateSMTP() {
    if [ ! -v $smtp_host ] || [ ! -v $smtp_user ] || [ ! -v $smtp_pass ]; then
       echo "WARNING : SMTP not parsed"
-      # sed -re "s/GIT(.*)END//" test ### TODO DEBUG
+      sed -ire '/SMTP/,/END SMTP/d' "$ANSIBLE_VARS"
    else
       echo "SMTP config parsed successfully"
    fi
