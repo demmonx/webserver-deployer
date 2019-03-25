@@ -6,7 +6,7 @@
 
 # Remove previous install
 rm -r "$ROOT"
-sed "/$MODULE_NAME/d" "$HOME/.bashrc"
+sed -i "/$MODULE_NAME/d" "$HOME/.bashrc"
 
 # Create root folders
 mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc" "$ROOT/tmp"
@@ -32,7 +32,7 @@ sed -i "s@{ANSIBLE_FOLDER}@$ANSIBLE_FOLDER@" "$VAGRANT_FILE.base"
 chmod -R 755 "$ROOT"
 
 # Add bin to .bashrc
-echo "PATH=\$PATH:$ROOTbin" >> "$HOME/.bashrc"
+echo "PATH=\$PATH:$ROOT/bin" >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
 
 # Show next instructions

@@ -5,7 +5,7 @@
 
 # Create files if don't exists
 mkdir -p "$ROOT"
-touch "$HOSTS"
+touch "$HOSTS_LOCAL"
 touch "$VBOX"
 
 # Show command details
@@ -53,7 +53,7 @@ for name in $@; do
     else
         echo "SUCCESS"
         # Update hosts files
-        echo "$machine_ip" >> "$HOSTS"
+        echo "$machine_ip" >> "$HOSTS_LOCAL"
         echo "$machine_ip     $machine_name" >> "$VBOX"
     fi
 
