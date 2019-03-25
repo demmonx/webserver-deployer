@@ -1,10 +1,10 @@
-# Auto-deploy script  for a LEMP server (Ansible / Vagrant profile)
+# Auto-deploy manager for a LEMP server ( deployement with Ansible / Vagrant profile)
 
 ## Background
 
-Vagrant and VirtualBox (or some other VM provider) can be used to quickly build or rebuild virtual servers.
+Vagrant and VirtualBox are used to quickly build or rebuild virtual servers.
 
-Those scripts use Vagrant profile to deploy a new server and install Nginx, MySQL and PHP (the 'EMP' part of 'LEMP') using the [Ansible](http://www.ansible.com/) provisioner.
+Those scripts use Vagrant profile to deploy a new server and install Nginx, MySQL, SMTP and PHP using the [Ansible](http://www.ansible.com/) provisioner.
 
 ## Getting Started
 
