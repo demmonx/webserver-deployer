@@ -10,6 +10,7 @@ usage() {
     echo "{MODULE_NAME} remove <name1> [<name2> ...]"
     echo "{MODULE_NAME} start <name1> [<name2> ...]"
     echo "{MODULE_NAME} stop <name1> [<name2> ...]"
+    echo "{MODULE_NAME} create <file>"
     echo "{MODULE_NAME} list"
     echo "{MODULE_NAME} help"
     echo "\$ {MODULE_NAME} update-hosts"
@@ -39,6 +40,8 @@ case "$PARAM" in
         {MODULE_NAME}-stop "$@";;
     list)
         {MODULE_NAME}-list "$@";;
+    create)
+        {MODULE_NAME}-create-conf "$@";;
     help)
         usage;;
     *)

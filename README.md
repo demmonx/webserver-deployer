@@ -4,13 +4,11 @@
 
 Vagrant and VirtualBox are used to quickly build or rebuild virtual servers.
 
-Those scripts use Vagrant profile to deploy a new server and install Nginx, MySQL, SMTP and PHP using the [Ansible](http://www.ansible.com/) provisioner.
+Those scripts use Vagrant profile to deploy a new server and install Nginx, PostgreSQL, SMTP and PHP using the [Ansible](http://www.ansible.com/) provisioner.
 
 ## Getting Started
 
-This README file is inside a folder that contains a `Vagrantfile` (hereafter this folder shall be called the [vagrant_root]), which tells Vagrant how to set up your virtual machine in VirtualBox.
-
-To use the vagrant file, you will need to have done the following:
+You will need to have done the following before using the app:
 
   1. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
@@ -26,6 +24,7 @@ You can run directly `lemp-manager` or use modules `lemp-manager-<module>`, tape
 
 | Command | Description | Status
 | --- | --- | --- |
+| `lemp-manager create` | Create a config file by asking the user | Working
 | `lemp-manager deploy <file1> [<file2> ...]` | Deploy new VMs | VM deployed, package installed but not configured -> debug needed
 | `lemp-manager stop <name1> [<name2> ...]` | Halt VMs | Working
 | `lemp-manager start <name1> [<name2> ...]` | Start VMs | Working

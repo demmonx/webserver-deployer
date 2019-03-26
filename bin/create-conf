@@ -1,0 +1,207 @@
+#!/bin/bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+# ##### FUNCTIONS 
+
+# Machine name
+function askMachineNAME() {
+    while :; do
+        read -p "Machine name [a-zA-Z, >= 4 char] => " machine_name
+        if [[ -z "$machine_name" ]]; then
+            continue
+        fi
+        
+        echo $machine_name | grep "^[a-zA-Z]\{4,\}$" > /dev/null
+        if [[ $? -eq 0 ]]; then
+            break;
+        fi
+    done
+    echo "  name: $machine_name" >> "$file"
+}
+
+# Machine ip
+function askMachineIP() {
+    while :; do
+        read -p "Machine ip => " machine_ip
+        if [[ -z "$machine_ip" ]]; then
+            continue
+        fi
+        
+        echo $machine_ip | grep -P '(?<=[^0-9.]|^)[1-9][0-9]{0,2}(\.([0-9]{0,3})){3}(?=[^0-9.]|$)' > /dev/null
+        if [[ $? -eq 0 ]]; then
+            break;
+        fi
+    done
+    echo "  ip: $machine_ip" >> "$file"
+}
+
+# Machine cpu
+function askMachineCPU() {
+    while :; do
+        read -p "Machine cpu [1-8] - ENTER=default => " machine_cpu
+        if [[ -z $machine_cpu ]]; then
+            break; # do nothing
+        fi
+
+        echo "$machine_cpu" | grep '^[1-8]$'  > /dev/null
+        if [[ $? -eq 0 ]]; then
+            echo "  cpu: $machine_cpu" >> "$file"
+            break;
+        fi
+    done
+}
+
+# Machine ram
+function askMachineRAM() {
+    while :; do
+        read -p "Machine ram [>= 512] - ENTER=default => " machine_ram
+        if [[ -z $machine_ram ]]; then
+            break # do nothing
+        fi
+
+        echo "$machine_ram" |  grep '^[0-9]\{3,\}$'  > /dev/null
+        if [[ $? -eq 0 && $machine_ram -ge 512 ]]; then
+            echo "  ram: $machine_ram" >> "$file"
+            break
+        fi
+    done
+}
+
+# 1 = true, 0 false
+function choice() {
+    while :; do
+        read -p "$1 ? [y/n] => " res
+        if [[ -z "$res" ]]; then
+            continue
+        fi
+
+        case "$res" in
+            [yYoO]*) echo 1; break;;
+            [nN]*) echo 0; break;;
+            *) continue
+        esac 
+    done
+} 
+
+# Read  input from CLI until isn't empty
+function nonEmptyVal() {
+    while :; do
+        read -p "$1 => " res
+        if [[ ! -z "$res" ]]; then
+            break
+        fi
+    done
+    echo "$res"
+}
+
+# Install postgres config
+function setupPOSTGRES() {
+    echo "postgres:" >> "$file"
+
+    # Database name
+    var=$(nonEmptyVal "Database")
+    echo "  db: $var" >> "$file"
+
+    # Username
+    var=$(nonEmptyVal "User")
+    echo "  user: $var" >> "$file"
+
+    # Password
+    var=$(nonEmptyVal "Password")
+    echo "  pass: $var" >> "$file"
+}
+
+# Install smtp config
+function setupSMTP() {
+    echo "smtp:" >> "$file"
+
+    # Host name
+    var=$(nonEmptyVal "Host")
+    echo "  db: $var" >> "$file"
+
+    # Username
+    var=$(nonEmptyVal "User")
+    echo "  user: $var" >> "$file"
+
+    # Password
+    var=$(nonEmptyVal "Password")
+    echo "  pass: $var" >> "$file"
+}
+
+# Install git config
+function setupGIT() {
+    echo "git:" >> "$file"
+    var=$(nonEmptyVal "Repo URL")
+    echo "  repo: $var" >> "$file"
+}
+
+# Install machine config
+function setupMachine() {
+    echo "machine:" > "$file"
+    askMachineNAME
+    askMachineIP
+    askMachineCPU
+    askMachineRAM
+}
+
+# help
+function usage() {
+    echo "{MODULE-NAME-create-conf <file>}"
+}
+
+################# CODE START HERE
+# Count param
+if [[ $# -ne 1 ]]; then
+    usage
+    exit 1
+fi
+
+# Check input param
+if [[ -f "$1" ]]; then
+    echo "$1 : File already exists"
+    echo "ABORTED"
+    exit 1
+else 
+    export file="$1" 
+fi
+
+# Ask for machine conf
+echo "------ MACHINE ------"
+setupMachine
+
+# Ask for PostgreSQL conf
+echo ""
+echo "------ POSTGRES ------"
+res=$(choice "Setup postgres conf")
+if [[ $res -eq 1 ]]; then
+    setupPOSTGRES
+fi
+
+# Ask for SMTP conf
+echo ""
+echo "------ SMTP ------"
+res=$(choice "Setup smtp conf")
+if [[ $res -eq 1 ]]; then
+    setupSMTP
+fi
+
+# Ask Git repo
+echo ""
+echo "------ GIT ------"
+res=$(choice "Setup git conf")
+if [[ $res -eq 1 ]]; then
+    setupGIT
+fi
+
+# Resume conf
+echo ""
+echo "------ CONFIG ------"
+cat "$file"
+
+# Deploy ?
+res=$(choice "Deploy current config")
+if [[ $res -eq 1 ]]; then
+    {MODULE-NAME} deploy "$file"
+fi

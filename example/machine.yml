@@ -15,4 +15,4 @@ git:
 pgsql:
   db: madb
   user: monuser
-  passwd: azerty123
+  passw: azerty123
