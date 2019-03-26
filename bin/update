@@ -3,5 +3,19 @@
 # Variable definitions
 . {ENV_LOCATION}
 
-# Process
-ansible-playbook "$ANSIBLE_FOLDER/playbook.yml" -i "$VBOX"
+
+# Iterate over each host
+for ...
+
+    # Parse conf
+    {MODULE_NAME}-parse-conf "$file"
+
+
+
+    # Process
+    echo "vagrant" | ansible-playbook -U vagrant -k "$ANSIBLE_FOLDER/playbook.yml" -i "$VBOX"
+
+    # Clean conf
+    {MODULE_NAME}-clean-conf
+
+done

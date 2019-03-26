@@ -55,12 +55,12 @@ for name in $@; do
         # Update hosts files
         echo "$machine_ip" >> "$HOSTS_LOCAL"
         echo "$machine_ip     $machine_name" >> "$VBOX"
+
+        # Copy config file
+        cp "$1" "$CONF/"
     fi
 
     # Clean config files
-    rm "$VAGRANT_FILE"
-    rm "$INVENTORY"
-    rm "$ANSIBLE_VARS"
-    rm -rf "$TMP/*"
+    {MODULE_NAME}-clean-conf
     echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
 done

@@ -11,12 +11,12 @@
 
   roles:
     - geerlingguy.firewall
-    - geerlingguy.repo-epel
-    - geerlingguy.repo-remi
-    - geerlingguy.mysql
     - geerlingguy.nginx
     - geerlingguy.php
     - geerlingguy.adminer
-    - geerlingguy.php-mysql
     - geerlingguy.git
+    - git_deployer
+    - geerlingguy.mysql
+    - geerlingguy.php-mysql
     - debops.postfix
+    - ansible_role_git_deployer

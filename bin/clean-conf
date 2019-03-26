@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+# Remove files
+rm "$VAGRANT_FILE"
+rm "$INVENTORY"
+rm "$ANSIBLE_VARS"
+rm -rf "$TMP/parsed"

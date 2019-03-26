@@ -1,7 +1,6 @@
 ---
 php_webserver_daemon: nginx
 php_enable_php_fpm: true
-php_enablerepo: remi
 php_packages:
   - ImageMagick
   - php
@@ -29,8 +28,6 @@ mysql_users:
     password: {MYSQL_PASSWD}
     encrypted: true
     priv: "{MYSQL_DB}.*:ALL"
-
-mysql_enablerepo: remi
 # END MYSQL conf
 
 # NGINX conf
@@ -39,6 +36,17 @@ nginx_user: "nginx"
 # END nginx conf
 
 # POSTFIX conf
+postfix__packages:
+  - libsasl2-modules
+
+postfix__lookup_tables:
+  - name: 'smtp_sasl_password_maps.in'
+    mode: '0600'
+    options:
+
+      - name: '[smtp.example.org]'
+        value: '{{ lookup("file", secret + "/postfix/smtp-auth.key") }}'
+
 postfix__maincf:
 
   - name: 'smtp_sasl_auth_enable'
@@ -59,20 +67,6 @@ postfix__maincf:
 # END POSTFIX conf
 
 # GIT Deployment
----
-- name: Clone repo inside web directory
-  shell: git clone {GIT_REPO}
-  args:
-    chdir: /var/www/
+git_repo: {GIT_REPO}
 
-- name: Clone repo inside web directory
-  shell: cp -r "*-master/*" ../html
-  args:
-    chdir: /var/www/
-
-- name: Change access right
-  shell: chmod -R 755 html; chgrp -R nginx:nginx html
-  args:
-    chdir: /var/www/
-  become: yes
 # END GIT Deployment

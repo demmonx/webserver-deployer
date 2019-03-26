@@ -1,7 +1,5 @@
 ---
 - src: geerlingguy.firewall
-- src: geerlingguy.repo-epel
-- src: geerlingguy.repo-remi
 - src: geerlingguy.adminer
 - src: geerlingguy.git
 - src: geerlingguy.mysql

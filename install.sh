@@ -9,18 +9,18 @@ rm -r "$ROOT"
 sed -i "/$MODULE_NAME/d" "$HOME/.bashrc"
 
 # Create root folders
-mkdir "$ROOT" "$ROOT/bin" "$ROOT/etc" "$ROOT/tmp"
+mkdir "$ROOT" "$BIN" "$ROOT/etc" "$TMP" "$CONF"
 
 # Copy env to ROOT
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
-cp bin/lemp-manager* "$ROOT/bin"
+cp bin/lemp-manager* "$BIN"
 for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
 mv "$MODULE_NAME-main" "$MODULE_NAME"
 
 # Edit script to place env correctly
-for file in "$ROOT/bin/"*; do
+for file in "$BIN/"*; do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
 done
@@ -35,7 +35,7 @@ sed -i "s@{ANSIBLE_FOLDER}@$ANSIBLE_FOLDER@" "$VAGRANT_FILE.base"
 chmod -R 755 "$ROOT"
 
 # Add bin to .bashrc
-echo "PATH=\$PATH:$ROOT/bin" >> "$HOME/.bashrc"
+echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
 
 # Show next instructions
