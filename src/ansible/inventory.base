@@ -1,1 +1,1 @@
-{NAME} ansible_port=22 ansible_host={IP} ansible_connection=ssh ansible_user=vagrant ansible_become=true
+{NAME} ansible_port=22 ansible_host={IP} ansible_connection=ssh ansible_user=vagrant ansible_become=true ansible_become_pass=vagrant ansible_ssh_pass=vagrant

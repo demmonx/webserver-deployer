@@ -19,9 +19,8 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     {MODULE_NAME}-parse-conf "$CONF/$ip"
 
     # Process
-    export ANSIBLE_CONFIG="$HOME/.ansible.cfg"
-    ansible-playbook -k "$ANSIBLE_PLAYBOOK" --inventory-file="$ANSIBLE_INVENTORY"
-    exit 0
+    export ANSIBLE_HOST_KEY_CHECKING=False
+    ansible-playbook "$ANSIBLE_PLAYBOOK" --inventory-file="$ANSIBLE_INVENTORY"
 
     # Clean conf
     {MODULE_NAME}-clean-conf

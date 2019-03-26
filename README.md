@@ -28,7 +28,7 @@ You can run directly `lemp-manager` or use modules `lemp-manager-<module>`, tape
 | `lemp-manager deploy <file1> [<file2> ...]` | Deploy new VMs | VM deployed, package installed but not configured -> debug needed
 | `lemp-manager stop <name1> [<name2> ...]` | Halt VMs | Working
 | `lemp-manager start <name1> [<name2> ...]` | Start VMs | Working
-| `lemp-manager update` | Update installed VMs | Not tested yet
+| `lemp-manager update` | Update installed VMs | Working
 | `lemp-manager list` | List installed VMs | Working
 | `lemp-manager update-hosts` | Update /etc/hosts (as root) | Working
 | `lemp-manager remove <name1> [<name2> ...]` | Delete VMs | Working
