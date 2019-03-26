@@ -3,19 +3,25 @@
 # Variable definitions
 . {ENV_LOCATION}
 
+# Check if local hosts file isn't empty
+if [ ! -f "$VBOX" ]; then
+    echo "$VBOX : File not found!".
+    echo "Aborted"
+    exit 2
+fi
 
 # Iterate over each host
-for ...
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    # Get the ip
+    ip=$(echo "$line" | awk '{print $1}')
 
     # Parse conf
-    {MODULE_NAME}-parse-conf "$file"
-
-
+    {MODULE_NAME}-parse-conf "$CONF/$ip"
 
     # Process
-    echo "vagrant" | ansible-playbook -U vagrant -k "$ANSIBLE_PLAYBOOK" -i "$VBOX"
+    ansible-playbook "$ANSIBLE_PLAYBOOK" -i "$ANSIBLE_INVENTORY"
 
     # Clean conf
     {MODULE_NAME}-clean-conf
 
-done
+done < "$VBOX"
