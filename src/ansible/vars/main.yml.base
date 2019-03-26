@@ -18,17 +18,16 @@ php_packages:
   - php-xmlrpc
   - php-fpm
 
-# MYSQL conf
-mysql_root_password: {MYSQL_ROOT_PASSWD}
-mysql_databases:
-  - name: {MYSQL_DB}
+# PGSQL conf
+postgresql__databases:
+  - name: {PGSQL_DB}
+    owner: {PGSQL_USER}
 
-mysql_users: 
-  - name: {MYSQL_USER}
-    password: {MYSQL_PASSWD}
+postgresql__roles:
+  - name: {PGSQL_USER}
+    password: {PGSQL_PASSWD}
     encrypted: true
-    priv: "{MYSQL_DB}.*:ALL"
-# END MYSQL conf
+# END PGSQL conf
 
 # NGINX conf
 nginx_worker_connections: 1024

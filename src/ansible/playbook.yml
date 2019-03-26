@@ -15,8 +15,7 @@
     - geerlingguy.php
     - geerlingguy.adminer
     - geerlingguy.git
-    - git_deployer
-    - geerlingguy.mysql
-    - geerlingguy.php-mysql
+    - debops.postgresql
+    - geerlingguy.php-pgsql
     - debops.postfix
     - ansible_role_git_deployer

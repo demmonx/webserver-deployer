@@ -122,13 +122,13 @@ function validateGIT() {
    fi
 }
 
-# Check mysql param and remove section is something is missing
-function validateMySQL() {
-   if [ -z $mysql_db ] || [ -z $mysql_passwd ] || [ -z $mysql_root_passwd ] || [ -z $mysql_user ]; then
-      echo "WARNING : MySQL not parsed"
-      sed -ri '/MYSQL/,/END MYSQL/d' "$ANSIBLE_VARS"
+# Check pgsql param and remove section is something is missing
+function validatePgSQL() {
+   if [ -z $pgsql_db ] || [ -z $pgsql_passwd ] || [ -z $pgsql_user ]; then
+      echo "WARNING : PgSQL not parsed"
+      sed -ri '/PGSQL/,/END PGSQL/d' "$ANSIBLE_VARS"
    else
-      echo "MySQL config parsed successfully"
+      echo "PgSQL config parsed successfully"
    fi
 }
 
@@ -171,8 +171,8 @@ cp "$ANSIBLE_VARS.base" "$ANSIBLE_VARS"
 # Check smtp
 validateSMTP
 
-# Check mysql
-validateMySQL
+# Check pgsql
+validatePgSQL
 
 # Check git
 validateGIT
@@ -190,10 +190,9 @@ sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$INVENTORY"
 
 # Apply config - Vars (Ansible)
 sed -i "s#{GIT_REPO}#$git_repo#g"  "$ANSIBLE_VARS"
-sed -i "s/{MYSQL_ROOT_PASSWD}/$mysql_root_passwd/g"  "$ANSIBLE_VARS"
-sed -i "s/{MYSQL_DB}/$mysql_db/g"  "$ANSIBLE_VARS"
-sed -i "s/{MYSQL_USER}/$mysql_user/g"  "$ANSIBLE_VARS"
-sed -i "s/{MYSQL_PASSWD}/$mysql_passwd/g"  "$ANSIBLE_VARS"
+sed -i "s/{PGSQL_DB}/$pgsql_db/g"  "$ANSIBLE_VARS"
+sed -i "s/{PGSQL_USER}/$pgsql_user/g"  "$ANSIBLE_VARS"
+sed -i "s/{PGSQL_PASSWD}/$pgsql_passwd/g"  "$ANSIBLE_VARS"
 sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_VARS"
 
 # Apply config - Postfix pass (Ansible)

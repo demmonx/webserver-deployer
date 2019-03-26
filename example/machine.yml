@@ -1,20 +1,18 @@
 machine:
-  name: toto
-  ram: 513
+  name: machine
+  ram: 512
   cpu: 2
-  ip: 192.168.2.3
+  ip: 192.168.2.50
 
 smtp:
   host: stmp.gmail.com
   user: dev.cyril.n7
-  pass: azerty123
+  pass: monpass
 
 git:
   repo: https://github.com/Microsoft/project-html-website
 
-mysql:
-  root:
-    passwd: toto
-  db:
-  user:
-  passwd:
+pgsql:
+  db: madb
+  user: monuser
+  passwd: azerty123

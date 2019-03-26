@@ -35,6 +35,9 @@ done
 sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$VAGRANT_FILE.base"
 sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$VAGRANT_FILE.base"
 
+# Edit ansible file to set up links
+sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$ANSIBLE_PLAYBOOK.base"
+
 # Change access right
 chmod -R 755 "$ROOT"
 
