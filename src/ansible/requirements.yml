@@ -4,7 +4,3 @@
 - src: geerlingguy.git
 - src: geerlingguy.nginx
 - src: geerlingguy.php
-- src: debops.postfix
-- src: debops.postgresql
-- src: geerlingguy.php-pgsql
-

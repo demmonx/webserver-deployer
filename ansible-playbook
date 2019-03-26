@@ -1,0 +1,1 @@
+vagrant -k /home/cyril/.webserver-deployer.d/etc/ansible/playbook.yml --inventory-file=/home/cyril/.webserver-deployer.d/etc/ansible/inventory

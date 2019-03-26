@@ -1,21 +1,15 @@
 ---
-# Ansible playbook for a LEMP server.
-#
-# @author Jeff Geerling (2014).
-
 - hosts: all
   gather_facts: yes
+  become: True
 
   vars_files:
     - {ANSIBLE_VARS}
 
   roles:
-    - geerlingguy.firewall
-    - geerlingguy.nginx
-    - geerlingguy.php
-    - geerlingguy.adminer
-    - geerlingguy.git
-    - debops.postgresql
-    - geerlingguy.php-pgsql
-    - debops.postfix
+    #- geerlingguy.firewall
+    #- geerlingguy.nginx
+    #- geerlingguy.php
+    #- geerlingguy.adminer
+    #- geerlingguy.git
     - ansible_role_git_deployer

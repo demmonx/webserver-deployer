@@ -21,6 +21,7 @@ cp bin/* "$BIN"
 cp -r src/* "$ETC"
 
 # Edit filenames
+previous_folder=$(pwd)
 cd "$BIN"
 for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
 mv "$MODULE_NAME-main" "$MODULE_NAME"
@@ -36,7 +37,7 @@ sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$VAGRANT_FILE.base"
 sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$VAGRANT_FILE.base"
 
 # Edit ansible file to set up links
-sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$ANSIBLE_PLAYBOOK.base"
+sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$ANSIBLE_PLAYBOOK"
 
 # Change access right
 chmod -R 755 "$ROOT"
@@ -45,5 +46,15 @@ chmod -R 755 "$ROOT"
 echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
 
+# DEBUG ONLY
+if [[ ( $# -eq 1 ) && ( $1 == '--debug' ) ]]; then
+    echo "--- DEBUG MODE ENABLED ---"
+    cd "$previous_folder"
+    echo "192.168.2.50  machine" > "$VBOX"
+    cp "example/machine.yml" "$CONF/192.168.2.50"
+fi
+
 # Show next instructions
 echo "Success ! Now, run 'source $HOME/.bashrc' in order to have commands globally"
+
+

@@ -53,7 +53,7 @@ function checkIP() {
     fi
 
     cat "$HOSTS" | grep -i -e "$machine_ip"  > /dev/null
-    if [[ $? -eq 0 ]]; then
+    if [[ ( $? -eq 0 ) && ( $unique -eq 1 ) ]]; then
         echo "VirtualMachine with the same IP already exist"
         exit 1;
     fi
@@ -68,7 +68,7 @@ function checkName() {
     fi
 
     cat "$VBOX" | grep -i -e " $machine_name$"  > /dev/null
-    if [[ $? -eq 0 ]]; then
+    if [[ ( $? -eq 0 ) && ( $unique -eq 1 ) ]]; then
         echo "VirtualMachine with the same name already exist"
         exit 1;
     fi
@@ -76,6 +76,13 @@ function checkName() {
 
 # Check if machine settings are correct or no
  function validateMachine() {
+   # Allow to generate conf for an existing machine 
+   if [[ ( ! -z $1 ) && ( $1 == "--unique" ) ]]; then
+      export unique=1
+   else
+      export unique=0
+   fi   
+
    # Name 
    if [ -z $machine_name ]; then
       echo "Machine name must be defined"
@@ -161,11 +168,11 @@ parse_yaml "$1" > "$TMP/parsed"
 eval $(cat "$TMP/parsed")
 
 # Check machine
-validateMachine
+validateMachine "$2"
 
 # Clone files
 cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
-cp "$INVENTORY.base" "$INVENTORY"
+cp "$ANSIBLE_INVENTORY.base" "$ANSIBLE_INVENTORY"
 cp "$ANSIBLE_VARS.base" "$ANSIBLE_VARS"
 
 # Check smtp
@@ -184,9 +191,9 @@ sed -i "s/{CPU}/$machine_cpu/g"  "$VAGRANT_FILE"
 sed -i "s/{IP}/$machine_ip/g"  "$VAGRANT_FILE"
 
 # Apply config - Inventory
-sed -i "s/{NAME}/$machine_name/g"  "$INVENTORY"
-sed -i "s/{IP}/$machine_ip/g"  "$INVENTORY"
-sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$INVENTORY"
+sed -i "s/{NAME}/$machine_name/g"  "$ANSIBLE_INVENTORY"
+sed -i "s/{IP}/$machine_ip/g"  "$ANSIBLE_INVENTORY"
+sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_INVENTORY"
 
 # Apply config - Vars (Ansible)
 sed -i "s#{GIT_REPO}#$git_repo#g"  "$ANSIBLE_VARS"

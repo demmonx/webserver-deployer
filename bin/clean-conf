@@ -5,6 +5,6 @@
 
 # Remove files
 rm "$VAGRANT_FILE"
-rm "$INVENTORY"
+rm "$ANSIBLE_INVENTORY"
 rm "$ANSIBLE_VARS"
 rm -rf "$TMP/parsed"
