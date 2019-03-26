@@ -5,9 +5,10 @@ machine:
   ip: 192.168.2.50
 
 smtp:
-  host: stmp.gmail.com
-  user: dev.cyril.n7
-  pass: monpass
+  host: smtp.gmail.com
+  user: cyril.dev.n7
+  pass: azerty1234
+  mail: cyril.dev.n7@gmail.com
 
 git:
   repo: https://github.com/Microsoft/project-html-website
@@ -15,4 +16,4 @@ git:
 pgsql:
   db: madb
   user: monuser
-  passw: azerty123
+  pass: azerty123

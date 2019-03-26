@@ -12,4 +12,6 @@
     #- geerlingguy.php
     #- geerlingguy.adminer
     #- geerlingguy.git
-    - ansible_role_git_deployer
+    #- ansible_role_git_deployer
+    #- ansible_role_postgres
+    - ansible_role_postfix

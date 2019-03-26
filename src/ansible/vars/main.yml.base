@@ -18,14 +18,9 @@ php_packages:
   - php-imagick
 
 # PGSQL conf
-postgresql__databases:
-  - name: {PGSQL_DB}
-    owner: {PGSQL_USER}
-
-postgresql__roles:
-  - name: {PGSQL_USER}
-    password: {PGSQL_PASSWD}
-    encrypted: true
+pgsql_db: {PGSQL_DB}
+pgsql_user: {PGSQL_USER}
+pgsql_pass: {PGSQL_PASS}
 # END PGSQL conf
 
 # NGINX conf
@@ -34,34 +29,10 @@ nginx_user: "nginx"
 # END nginx conf
 
 # POSTFIX conf
-postfix__packages:
-  - libsasl2-modules
-
-postfix__lookup_tables:
-  - name: 'smtp_sasl_password_maps.in'
-    mode: '0600'
-    options:
-
-      - name: '[smtp.example.org]'
-        value: '{{ lookup("file", secret + "/postfix/smtp-auth.key") }}'
-
-postfix__maincf:
-
-  - name: 'smtp_sasl_auth_enable'
-    value: True
-
-  - name: 'smtp_tls_security_level'
-    value: 'encrypt'
-
-  - name: 'smtp_sasl_tls_security_options'
-    value: 'noanonymous'
-
-  - name: 'relayhost'
-    value: '[{SMTP_HOST}]'
-
-  - name: 'smtp_sasl_password_maps'
-    value: [ 'hash:${config_directory}/smtp_sasl_password_maps' ]
-
+postfix_host: {SMTP_HOST}
+postfix_user: {SMTP_USER}
+postfix_pass: {SMTP_PASS}
+postfix_mail: {SMTP_MAIL}
 # END POSTFIX conf
 
 # GIT Deployment
