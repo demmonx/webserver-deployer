@@ -1,0 +1,3 @@
+[submodule "src/ansible/roles/ansible_role_postfix_deployer"]
+	path = src/ansible/roles/ansible_role_postfix_deployer
+	url = https://github.com/demmonx/ansible_role_postfix_deployer.git
