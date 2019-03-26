@@ -7,7 +7,7 @@
   gather_facts: yes
 
   vars_files:
-    - vars/main.yml
+    - {ANSIBLE_VARS}
 
   roles:
     - geerlingguy.firewall

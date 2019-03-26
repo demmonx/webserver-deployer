@@ -5,17 +5,23 @@
 . .env
 
 # Remove previous install
-rm -r "$ROOT"
+rm -rf "$ROOT"
 sed -i "/$MODULE_NAME/d" "$HOME/.bashrc"
 
 # Create root folders
-mkdir "$ROOT" "$BIN" "$ROOT/etc" "$TMP" "$CONF"
+mkdir -p "$ROOT" "$BIN" "$ETC" "$TMP" "$CONF"
 
 # Copy env to ROOT
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
-cp bin/lemp-manager* "$BIN"
+cp bin/* "$BIN"
+
+# Copy src to /etc/lemp-manager
+cp -r src/* "$ETC"
+
+# Edit filenames
+cd "$BIN"
 for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
 mv "$MODULE_NAME-main" "$MODULE_NAME"
 
@@ -25,11 +31,9 @@ for file in "$BIN/"*; do
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
 done
 
-# Copy src to /etc/lemp-manager
-cp -r src/* "$ROOT/etc/"
-
 # Edit vagrant file to set ansible files correctly
-sed -i "s@{ANSIBLE_FOLDER}@$ANSIBLE_FOLDER@" "$VAGRANT_FILE.base"
+sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$VAGRANT_FILE.base"
+sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$VAGRANT_FILE.base"
 
 # Change access right
 chmod -R 755 "$ROOT"

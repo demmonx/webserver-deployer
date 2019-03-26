@@ -5,23 +5,23 @@
 
 # Get the list with status
 file="$TMP/vblist"
+output="$TMP/output"
 vboxmanage list vms --long | grep -e "Name:" -e "State:" | grep -v -e 'Host path:' > "$file"
 
 # Generate str containing lemp vbox
-str=''
 while IFS='' read -r line || [[ -n "$line" ]]; do
     name=$(echo "$line" | awk '{print $2}')
-    str="$str\|$name"
+    cat "$file" | grep -A1 "$name" >> "$output"
 done < "$VBOX"
-str=${str:2}
 
 # Filter to remove useless data
-sed -ie "/$str/,+1d" "$file"
-sed -i '/State/a --------------\n'  "$file"
-sed -ire "s/\(since(.*)\)//"  "$file"
+sed -i '/State/a --------------\n'  "$output"
+sed -ri "s/\(since(.*)\)//"  "$output"
 
 # Show the output
-cat "$file"
+cat "$output"
+
 
 # Remove temporary file
 rm "$file"
+rm "$output"

@@ -24,16 +24,16 @@ To use the vagrant file, you will need to have done the following:
 
 You can run directly `lemp-manager` or use modules `lemp-manager-<module>`, tape `lemp-manager help` to show availables commands.
 
-| Command | Description |
-| --- | --- |
-| `lemp-manager deploy <file1> [<file2> ...]` | Deploy new VMs |
-| `lemp-manager stop <name1> [<name2> ...]` | Halt VMs |
-| `lemp-manager start <name1> [<name2> ...]` | Start VMs |
-| `lemp-manager update` | Update installed VMs |
-| `lemp-manager list` | List installed VMs |
-| `lemp-manager update-hosts` | Update /etc/hosts (as root) |
-| `lemp-manager remove <name1> [<name2> ...]` | Delete VMs |
-| `lemp-manager help` | Show available commands |
+| Command | Description | Status
+| --- | --- | --- |
+| `lemp-manager deploy <file1> [<file2> ...]` | Deploy new VMs | Not working
+| `lemp-manager stop <name1> [<name2> ...]` | Halt VMs | Working
+| `lemp-manager start <name1> [<name2> ...]` | Start VMs | Working
+| `lemp-manager update` | Update installed VMs | Not working
+| `lemp-manager list` | List installed VMs | working
+| `lemp-manager update-hosts` | Update /etc/hosts (as root) | Working
+| `lemp-manager remove <name1> [<name2> ...]` | Delete VMs | Working
+| `lemp-manager help` | Show available commands | Working
 
 ### Deploy new VMs
 VM config **must be described in a yml file**. As least IP and name should be set, others fields are optionnals. 

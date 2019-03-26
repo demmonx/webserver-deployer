@@ -13,7 +13,7 @@ for ...
 
 
     # Process
-    echo "vagrant" | ansible-playbook -U vagrant -k "$ANSIBLE_FOLDER/playbook.yml" -i "$VBOX"
+    echo "vagrant" | ansible-playbook -U vagrant -k "$ANSIBLE_PLAYBOOK" -i "$VBOX"
 
     # Clean conf
     {MODULE_NAME}-clean-conf
