@@ -7,9 +7,10 @@
 [submodule "src/ansible/roles/ansible_role_php"]
 	path = src/ansible/roles/ansible_role_php
 	url = https://github.com/demmonx/ansible_role_php
-[submodule "src/ansible/roles/ansible_role_symfony"]
-	path = src/ansible/roles/ansible_role_symfony
-	url = https://github.com/demmonx/ansible_role_symfony
+[submodule "src/ansible/roles/ansible_role_composer"]
+	path = src/ansible/roles/ansible_role_composer
+	url = https://github.com/demmonx/ansible_role_composer
+	branch = master
 [submodule "src/ansible/roles/ansible_role_git"]
 	path = src/ansible/roles/ansible_role_git
 	url = https://github.com/demmonx/ansible_role_git
