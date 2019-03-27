@@ -4,6 +4,19 @@
 # Base folder
 . .env
 
+# Load git submodules
+echo "$@" | grep "--debug" > /dev/null
+if [[ $? -eq 0 ]]; then
+    bin/private/asker "Load submodules"
+    if [[ $? -eq 0 ]]; then
+        #for folder in "find src/ansible/roles -type d"; do
+        #    cd "$folder"
+            git submodule init 
+            git submodule update
+        #done
+    fi
+fi
+
 # Remove previous install
 rm -rf "$ROOT"
 sed -i "/$MODULE_NAME/d" "$HOME/.bashrc"
@@ -30,6 +43,7 @@ mv "$MODULE_NAME-main" "$MODULE_NAME"
 for file in "$BIN/"*; do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
+    sed -i "s@{BIN_PRIVATE}@$BIN_PRIVATE@" "$file"
 done
 
 # Edit vagrant file to set ansible files correctly
@@ -47,7 +61,8 @@ echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
 
 # DEBUG ONLY
-if [[ ( $# -eq 1 ) && ( $1 == '--debug' ) ]]; then
+echo "$@" | grep "--debug" > /dev/null
+if [[ $? -eq 0 ]]; then
     echo "--- DEBUG MODE ENABLED ---"
     cd "$previous_folder"
     echo "192.168.2.50  machine" > "$VBOX"

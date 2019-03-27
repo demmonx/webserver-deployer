@@ -31,7 +31,7 @@ fi
 # Iterate over params
 for name in $@; do
     # Generate conf
-    {MODULE_NAME}-parse-conf "$1" --unique
+    {BIN_PRIVATE}/parse-conf "$1" --unique
 
     # Skip vm if the file cannot be parsed
     if [[ $? -ne 0 ]]; then
@@ -62,6 +62,6 @@ for name in $@; do
     exit 1
 
     # Clean config files
-    {MODULE_NAME}-clean-conf
+    {BIN_PRIVATE}/clean-conf
     echo "{SMTP_USER}:{SMTP_PASSWD}" > "$ANSIBLE_SMTP_SECRET"
 done

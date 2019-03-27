@@ -9,12 +9,11 @@ Those scripts use Vagrant profile to deploy a new server and install Nginx, Post
 ## Getting Started
 
 You will need to have done the following before using the app:
-
-  1. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-  2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
-  3. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
-  4. Install  `sshpass` by running  `apt-get install sshpass` or  `yum install sshpass`
-  5. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r src/ansible/requirements.yml`
+  1. Clone the current repo with submodules : `git clone --recurse-submodules https://github.com/demmonx/webserver-deployer`
+  2. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+  3. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
+  4. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
+  5. Install  `sshpass` by running  `apt-get install sshpass` or  `yum install sshpass`
   6. Run `./install.sh` to install `lemp-manager`, files are placed into `$HOME/.lemp-manager.d/`
   7. Run `source $HOME/.bashrc` to make the commands available globally
 

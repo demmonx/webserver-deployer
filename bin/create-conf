@@ -69,22 +69,6 @@ function askMachineRAM() {
     done
 }
 
-# 1 = true, 0 false
-function choice() {
-    while :; do
-        read -p "$1 ? [y/n] => " res
-        if [[ -z "$res" ]]; then
-            continue
-        fi
-
-        case "$res" in
-            [yYoO]*) echo 1; break;;
-            [nN]*) echo 0; break;;
-            *) continue
-        esac 
-    done
-} 
-
 # Read  input from CLI until isn't empty
 function nonEmptyVal() {
     while :; do
@@ -174,24 +158,24 @@ setupMachine
 # Ask for PostgreSQL conf
 echo ""
 echo "------ POSTGRES ------"
-res=$(choice "Setup postgres conf")
-if [[ $res -eq 1 ]]; then
+{BIN_PRIVATE}/asker  "Setup postgres conf"
+if [[ $? -eq 0 ]]; then
     setupPOSTGRES
 fi
 
 # Ask for SMTP conf
 echo ""
 echo "------ SMTP ------"
-res=$(choice "Setup smtp conf")
-if [[ $res -eq 1 ]]; then
+{BIN_PRIVATE}/asker  "Setup smtp conf"
+if [[ $? -eq 0 ]]; then
     setupSMTP
 fi
 
 # Ask Git repo
 echo ""
 echo "------ GIT ------"
-res=$(choice "Setup git conf")
-if [[ $res -eq 1 ]]; then
+{BIN_PRIVATE}/asker "Setup git conf"
+if [[ $? -eq 0 ]]; then
     setupGIT
 fi
 
@@ -201,7 +185,7 @@ echo "------ CONFIG ------"
 cat "$file"
 
 # Deploy ?
-res=$(choice "Deploy current config")
-if [[ $res -eq 1 ]]; then
+{BIN_PRIVATE}/asker  "Deploy current config"
+if [[ $? -eq 0 ]]; then
     {MODULE-NAME} deploy "$file"
 fi

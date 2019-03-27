@@ -16,13 +16,13 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     ip=$(echo "$line" | awk '{print $1}')
 
     # Parse conf
-    {MODULE_NAME}-parse-conf "$CONF/$ip"
+    {BIN_PRIVATE}/parse-conf "$CONF/$ip"
 
     # Process
     export ANSIBLE_HOST_KEY_CHECKING=False
     ansible-playbook "$ANSIBLE_PLAYBOOK" --inventory-file="$ANSIBLE_INVENTORY"
 
-    # Clean conf
-    {MODULE_NAME}-clean-conf
+    #bIn Clean conf
+    {BIN_PRIVATE}/clean-conf
 
 done < "$VBOX"

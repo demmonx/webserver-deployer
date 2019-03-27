@@ -7,12 +7,11 @@
     - {ANSIBLE_VARS}
 
   roles:
-    - geerlingguy.firewall
-    - geerlingguy.nginx
-    - geerlingguy.php
-    - geerlingguy.adminer
-    - geerlingguy.git
-    - ansible_role_git_deployer
+    - ansible_role_nginx
+    - ansible_role_php
+    - ansible_role_git
     - ansible_role_postgres
+    - ansible_role_adminer
     - ansible_role_postfix
+    - ansible_role_symfony
     
