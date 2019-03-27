@@ -5,7 +5,7 @@
 . .env
 
 # Load git submodules
-echo "$@" | grep "--roles" > /dev/null
+echo "$@" | grep -- "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
     submodule update --init --recursive
 else
@@ -26,30 +26,27 @@ mkdir -p "$ROOT" "$BIN" "$ETC" "$TMP" "$CONF"
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
-cp bin/* "$BIN"
+cp -r bin/* "$BIN"
 
 # Copy src to /etc/lemp-manager
 cp -r src/* "$ETC"
 
 # Edit filenames
-previous_folder=$(pwd)
-cd "$BIN"
-for f in * ; do mv -- "$f" "$MODULE_NAME-$f" ; done
-mv "$MODULE_NAME-main" "$MODULE_NAME"
+for f in $(find $BIN -maxdepth 1 -type f); do 
+    name=$(basename $f)
+    mv -- "$f" "$BIN/$MODULE_NAME-$name" ; 
+done
+mv "$BIN/$MODULE_NAME-main" "$BIN/$MODULE_NAME"
 
-# Edit script to place env correctly
-for file in "$BIN/"*; do
+# Edit files to install absolute path
+for file in $(find $ROOT -not \( -path $ANSIBLE_ROLES -prune \) -type f); do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
     sed -i "s@{BIN_PRIVATE}@$BIN_PRIVATE@" "$file"
+    sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$file"
+    sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$file"
+    sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$file"
 done
-
-# Edit vagrant file to set ansible files correctly
-sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$VAGRANT_FILE.base"
-sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$VAGRANT_FILE.base"
-
-# Edit ansible file to set up links
-sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$ANSIBLE_PLAYBOOK"
 
 # Change access right
 chmod -R 755 "$ROOT"
@@ -59,10 +56,9 @@ echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
 
 # DEBUG ONLY
-echo "$@" | grep "--debug" > /dev/null
+echo "$@" | grep -- "--debug" > /dev/null
 if [[ $? -eq 0 ]]; then
     echo "--- DEBUG MODE ENABLED ---"
-    cd "$previous_folder"
     echo "192.168.2.50  machine" > "$VBOX"
     cp "example/machine.yml" "$CONF/192.168.2.50"
 fi
