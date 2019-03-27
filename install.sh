@@ -5,15 +5,13 @@
 . .env
 
 # Load git submodules
-echo "$@" | grep "--debug" > /dev/null
+echo "$@" | grep "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
+    submodule update --init --recursive
+else
     bin/private/asker "Load submodules"
     if [[ $? -eq 0 ]]; then
-        #for folder in "find src/ansible/roles -type d"; do
-        #    cd "$folder"
-            git submodule init 
-            git submodule update
-        #done
+        submodule update --init --recursive
     fi
 fi
 
