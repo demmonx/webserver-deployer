@@ -81,7 +81,7 @@ function nonEmptyVal() {
 }
 
 # Install postgres config
-function setupPOSTGRES() {
+function setupDB() {
     echo "postgres:" >> "$file"
 
     # Database name
@@ -157,10 +157,10 @@ setupMachine
 
 # Ask for PostgreSQL conf
 echo ""
-echo "------ POSTGRES ------"
+echo "------ DB ------"
 {BIN_PRIVATE}/asker  "Setup postgres conf"
 if [[ $? -eq 0 ]]; then
-    setupPOSTGRES
+    setupDB
 fi
 
 # Ask for SMTP conf

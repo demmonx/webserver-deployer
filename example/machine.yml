@@ -12,7 +12,7 @@ smtp:
 git:
   repo: https://github.com/Microsoft/project-html-website
 
-pgsql:
+db:
   db: madb
   user: monuser
   pass: azerty123

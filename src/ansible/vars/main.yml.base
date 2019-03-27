@@ -1,41 +1,41 @@
 ---
-php_webserver_daemon: nginx
-php_enable_php_fpm: true
-php_packages:
-  - php
-  - php-cli
-  - php-common
-  - php-gd
-  - php-imap
-  - php-ldap
-  - php-mbstring
-  - php-pdo
-  - php-pear
-  - php-xml
-  - php-xmlrpc
-  - php-fpm
-  - php-pgsql
-  - php-imagick
+# GENERAL conf
+webserver_daemon: nginx
+webserver_user: "nginx"
+web_folder: "/web"
+# END GENERAL conf
 
-# PGSQL conf
-pgsql_db: {PGSQL_DB}
-pgsql_user: {PGSQL_USER}
-pgsql_pass: {PGSQL_PASS}
-# END PGSQL conf
+# PHP conf
+php_packages:
+  - php7.2-gd
+  - php7.2-imap
+  - php7.2-ldap
+  - php7.2-mbstring
+  - php7.2-pdo
+  - php7.2-pear
+  - php7.2-xml
+  - php7.2-xmlrpc
+  - php7.2-pgsql
+  - php7.2-imagick
+# END PHP conf
+
+# DB conf
+db_name: {DB_NAME}
+db_user: {DB_USER}
+db_pass: {DB_PASS}
+# END DB conf
 
 # NGINX conf
-nginx_worker_connections: 1024
-nginx_user: "nginx"
-# END nginx conf
+nginx_workers_con: 4096
+nginx_workers_nb: 1
+# END NGINX conf
 
-# POSTFIX conf
-postfix_host: {SMTP_HOST}
-postfix_user: {SMTP_USER}
-postfix_pass: {SMTP_PASS}
-postfix_mail: {SMTP_MAIL}
-# END POSTFIX conf
+# SMTP conf
+smtp_host: {SMTP_HOST}
+smtp_user: {SMTP_USER}
+smtp_pass: {SMTP_PASS}
+# END SMTP conf
 
-# GIT Deployment
+# GIT conf
 git_repo: {GIT_REPO}
-
-# END GIT Deployment
+# END GIT conf
