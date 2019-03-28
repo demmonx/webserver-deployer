@@ -4,7 +4,7 @@
 . {ENV_LOCATION}
 
 # Remove files
-rm "$VAGRANT_FILE"
-rm "$ANSIBLE_INVENTORY"
-rm "$ANSIBLE_VARS"
+rm "$VAGRANT_FILE_LOCAL"
+rm "$ANSIBLE_INVENTORY_LOCAL"
+rm "$ANSIBLE_VARS_LOCAL"
 rm -rf "$TMP/parsed"

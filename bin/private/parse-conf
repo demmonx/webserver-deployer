@@ -123,7 +123,7 @@ function checkName() {
 function validateGIT() {
    if [ -z $git_repo ]; then
       echo "WARNING : GIT not parsed"
-      sed -ri '/GIT/,/END GIT/d' "$ANSIBLE_VARS"
+      sed -ri '/GIT/,/END GIT/d' "$ANSIBLE_VARS_LOCAL"
    else
       echo "GIT config parsed successfully"
    fi
@@ -133,7 +133,7 @@ function validateGIT() {
 function validateDB() {
    if [ -z $db_name ] || [ -z $db_pass ] || [ -z $db_user ]; then
       echo "WARNING : DB not parsed"
-      sed -ri '/DB/,/END DB/d' "$ANSIBLE_VARS"
+      sed -ri '/DB/,/END DB/d' "$ANSIBLE_VARS_LOCAL"
    else
       echo "DB config parsed successfully"
    fi
@@ -143,7 +143,7 @@ function validateDB() {
 function validateSMTP() {
    if [ -z $smtp_host ] || [ -z $smtp_user ] || [ -z $smtp_pass ]; then
       echo "WARNING : SMTP not parsed"
-      sed -ri '/SMTP/,/END SMTP/d' "$ANSIBLE_VARS"
+      sed -ri '/SMTP/,/END SMTP/d' "$ANSIBLE_VARS_LOCAL"
    else
       echo "SMTP config parsed successfully"
    fi
@@ -171,9 +171,9 @@ eval $(cat "$TMP/parsed")
 validateMachine "$2"
 
 # Clone files
-cp "$VAGRANT_FILE.base" "$VAGRANT_FILE"
-cp "$ANSIBLE_INVENTORY.base" "$ANSIBLE_INVENTORY"
-cp "$ANSIBLE_VARS.base" "$ANSIBLE_VARS"
+cp "$VAGRANT_FILE" "$VAGRANT_FILE_LOCAL"
+cp "$ANSIBLE_INVENTORY" "$ANSIBLE_INVENTORY_LOCAL"
+cp "$ANSIBLE_VARS" "$ANSIBLE_VARS_LOCAL_LOCAL"
 
 # Check smtp
 validateSMTP
@@ -185,21 +185,21 @@ validateDB
 validateGIT
 
 # Apply config - Vagrant file
-sed -i "s/{NAME}/$machine_name/g"  "$VAGRANT_FILE"
-sed -i "s/{RAM}/$machine_ram/g"  "$VAGRANT_FILE"
-sed -i "s/{CPU}/$machine_cpu/g"  "$VAGRANT_FILE"
-sed -i "s/{IP}/$machine_ip/g"  "$VAGRANT_FILE"
+sed -i "s/{NAME}/$machine_name/g"  "$VAGRANT_FILE_LOCAL"
+sed -i "s/{RAM}/$machine_ram/g"  "$VAGRANT_FILE_LOCAL"
+sed -i "s/{CPU}/$machine_cpu/g"  "$VAGRANT_FILE_LOCAL"
+sed -i "s/{IP}/$machine_ip/g"  "$VAGRANT_FILE_LOCAL"
 
 # Apply config - Inventory
-sed -i "s/{NAME}/$machine_name/g"  "$ANSIBLE_INVENTORY"
-sed -i "s/{IP}/$machine_ip/g"  "$ANSIBLE_INVENTORY"
-sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_INVENTORY"
+sed -i "s/{NAME}/$machine_name/g"  "$ANSIBLE_INVENTORY_LOCAL"
+sed -i "s/{IP}/$machine_ip/g"  "$ANSIBLE_INVENTORY_LOCAL"
+sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_INVENTORY_LOCAL"
 
 # Apply config - Vars (Ansible)
-sed -i "s#{GIT_REPO}#$git_repo#g"  "$ANSIBLE_VARS"
-sed -i "s/{DB_NAME}/$db_name/g"  "$ANSIBLE_VARS"
-sed -i "s/{DB_USER}/$db_user/g"  "$ANSIBLE_VARS"
-sed -i "s/{DB_PASS}/$db_pass/g"  "$ANSIBLE_VARS"
-sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_VARS"
-sed -i "s/{SMTP_USER}/$smtp_user/g"  "$ANSIBLE_VARS"
-sed -i "s/{SMTP_PASS}/$smtp_pass/g"  "$ANSIBLE_VARS"
+sed -i "s#{GIT_REPO}#$git_repo#g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{DB_NAME}/$db_name/g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{DB_USER}/$db_user/g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{DB_PASS}/$db_pass/g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{SMTP_USER}/$smtp_user/g"  "$ANSIBLE_VARS_LOCAL"
+sed -i "s/{SMTP_PASS}/$smtp_pass/g"  "$ANSIBLE_VARS_LOCAL"
