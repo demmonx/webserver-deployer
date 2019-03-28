@@ -43,9 +43,7 @@ for file in $(find $ROOT -not \( -path $ANSIBLE_ROLES -prune \) -type f); do
     sed -i "s@{ENV_LOCATION}@$ROOT/.env@" "$file"
     sed -i "s@{MODULE_NAME}@$MODULE_NAME@" "$file"
     sed -i "s@{BIN_PRIVATE}@$BIN_PRIVATE@" "$file"
-    sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK@" "$file"
-    sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY@" "$file"
-    sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS@" "$file"
+    
 done
 
 # Change access right

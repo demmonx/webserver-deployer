@@ -4,7 +4,6 @@
 . {ENV_LOCATION}
 
 # Create files if don't exists
-mkdir -p "$ROOT"
 touch "$VBOX"
 
 # Show command details
