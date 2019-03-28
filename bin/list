@@ -3,6 +3,12 @@
 # Variable definitions
 . {ENV_LOCATION}
 
+# Do nothing if we don't have any VM registred
+if [[ ( ! -f "$VBOX" ) || ( $(cat $VBOX | wc -l) -eq 0 ) ]]; then
+    echo "No VBOX registred"
+    exit 1
+fi
+
 # Get the list with status
 file="$TMP/vblist"
 output="$TMP/output"

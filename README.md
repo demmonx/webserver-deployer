@@ -24,12 +24,12 @@ You can run directly `webserver-deployer` or use modules `webserver-deployer-<mo
 | Command | Description | Status
 | --- | --- | --- |
 | `webserver-deployer create` | Create a config file by asking the user | Working
-| `webserver-deployer deploy <file1> [<file2> ...]` | Deploy new VMs | VM deployed, package installed but not configured -> debug needed
+| `webserver-deployer deploy <file1> [<file2> ...]` | Deploy new VMs |  Working
 | `webserver-deployer stop <name1> [<name2> ...]` | Halt VMs | Working
 | `webserver-deployer start <name1> [<name2> ...]` | Start VMs | Working
 | `webserver-deployer update` | Update installed VMs | Working
 | `webserver-deployer list` | List installed VMs | Working
-| `webserver-deployer update-hosts` | Update /etc/hosts (as root) | Working
+| `webserver-deployer update-hosts` | Update /etc/hosts (as root) | Working ~~ Trouble with acces right / PATH
 | `webserver-deployer remove <name1> [<name2> ...]` | Delete VMs | Working
 | `webserver-deployer help` | Show available commands | Working
 

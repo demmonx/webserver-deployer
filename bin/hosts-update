@@ -12,6 +12,8 @@ fi
 # Files creation if isn't exists
 touch "$VBOX"
 touch "$DEL_VBOX"
+chmod 777 "$VBOX"
+chmod 777 "$DEL_VBOX"
 
 # Add new vbox to host file
 while IFS='' read -r line || [[ -n "$line" ]]; do

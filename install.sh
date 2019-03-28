@@ -8,11 +8,11 @@
 echo "$@" | grep -- "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
     echo ""
-    submodule update --init --recursive
+    #git submodule update --init --recursive
 else
     bin/private/asker "Load submodules"
     if [[ $? -eq 0 ]]; then
-        submodule update --init --recursive
+        git submodule update --init --recursive
     fi
 fi
 
