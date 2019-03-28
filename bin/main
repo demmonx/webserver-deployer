@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+usage() {
+    shift
+    echo "{MODULE_NAME} deploy <vm1.yml> [<vm2.yml> ...]"
+    echo "{MODULE_NAME} update"
+    echo "{MODULE_NAME} remove <name1> [<name2> ...]"
+    echo "{MODULE_NAME} start <name1> [<name2> ...]"
+    echo "{MODULE_NAME} stop <name1> [<name2> ...]"
+    echo "{MODULE_NAME} create <file>"
+    echo "{MODULE_NAME} list"
+    echo "{MODULE_NAME} help"
+    echo "\$ {MODULE_NAME} update-hosts"
+}
+
+# Check if they are at least 1 param
+if [[ $# -eq 0 ]]; then # Error, no args provided
+    usage
+    exit 1
+fi
+
+# Filter the first arg
+PARAM=$1
+shift
+case "$PARAM" in
+    deploy)
+        {MODULE_NAME}-deploy "$@";;
+    update)
+        {MODULE_NAME}-update "$@";;
+    remove)
+        {MODULE_NAME}-delete "$@";;
+    update-hosts)
+        {MODULE_NAME}-hosts-update "$@";;
+    start)
+        {MODULE_NAME}-start "$@" ;;
+    stop)
+        {MODULE_NAME}-stop "$@";;
+    list)
+        {MODULE_NAME}-list "$@";;
+    create)
+        {MODULE_NAME}-create-conf "$@";;
+    help)
+        usage;;
+    *)
+        echo "ERROR: unknown parameter \"$PARAM\""
+        usage
+        exit 1
+        ;;
+esac

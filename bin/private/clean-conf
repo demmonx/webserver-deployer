@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+# Remove files
+rm "$VAGRANT_FILE_LOCAL"
+rm "$ANSIBLE_INVENTORY_LOCAL"
+rm "$ANSIBLE_PLAYBOOK_LOCAL"
+rm "$ANSIBLE_VARS_LOCAL"
+rm -rf "$TMP/parsed"

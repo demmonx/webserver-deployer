@@ -1,0 +1,21 @@
+[submodule "src/ansible/roles/ansible_role_adminer"]
+	path = src/ansible/roles/ansible_role_adminer
+	url = https://github.com/demmonx/ansible_role_adminer.git
+[submodule "src/ansible/roles/ansible_role_php"]
+	path = src/ansible/roles/ansible_role_php
+	url = https://github.com/demmonx/ansible_role_php.git
+[submodule "src/ansible/roles/ansible_role_postfix"]
+	path = src/ansible/roles/ansible_role_postfix
+	url = https://github.com/demmonx/ansible_role_postfix.git
+[submodule "src/ansible/roles/ansible_role_postgres"]
+	path = src/ansible/roles/ansible_role_postgres
+	url = https://github.com/demmonx/ansible_role_postgres.git
+[submodule "src/ansible/roles/ansible_role_nginx"]
+	path = src/ansible/roles/ansible_role_nginx
+	url = https://github.com/demmonx/ansible_role_nginx.git
+[submodule "src/ansible/roles/ansible_role_composer"]
+	path = src/ansible/roles/ansible_role_composer
+	url = https://github.com/demmonx/ansible_role_composer.git
+[submodule "src/ansible/roles/ansible_role_git"]
+	path = src/ansible/roles/ansible_role_git
+	url = https://github.com/demmonx/ansible_role_git.git

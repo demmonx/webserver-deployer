@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+# Do nothing if we don't have any VM registred
+if [[ ( ! -f "$VBOX" ) || ( $(cat $VBOX | wc -l) -eq 0 ) ]]; then
+    echo "No VBOX registred"
+    exit 1
+fi
+
+# Get the list with status
+file="$TMP/vblist"
+output="$TMP/output"
+vboxmanage list vms --long | grep -e "Name:" -e "State:" | grep -v -e 'Host path:' > "$file"
+
+# Generate str containing lemp vbox
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    name=$(echo "$line" | awk '{print $2}')
+    cat "$file" | grep -A1 "$name" >> "$output"
+done < "$VBOX"
+
+# Filter to remove useless data
+sed -i '/State/a --------------\n'  "$output"
+sed -ri "s/\(since(.*)\)//"  "$output"
+
+# Show the output
+cat "$output"
+
+
+# Remove temporary file
+rm "$file"
+rm "$output"

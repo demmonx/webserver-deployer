@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# FILES
-FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
-VBOX="$FILES_FOLDER/box"
-DEL_VBOX="$FILES_FOLDER/del_vbox"
+# Variable definitions
+. {ENV_LOCATION}
 
 usage() {
-    echo "delete.sh vbox1 [vbox2 ....]"
+    echo "{MODULE_NAME}-delete <name1> [<name2> ...]"
 }
 
 # Check there is at least 1 PM
@@ -20,18 +18,20 @@ for name in $@; do
     # Check machine name
     cat "$VBOX" | grep -i -e "$name$"  > /dev/null
     if [[ $? -ne 0 ]]; then
-        echo "No VirtualMachine with this name : $name"
+        echo "$name : No VirtualMachine with this name "
         continue
     fi
 
     # Halt virtual machine
-    vboxmanage controlvm "$name" shutdown 2> /dev/null
+    {MODULE_NAME} stop "$name" > /dev/null
 
     # Remove VM
     vboxmanage unregistervm --delete "$name"
     if [[ $? -ne 0 ]]; then
-        echo "Error removing : $name"
+        echo "$name : Error"
         continue
+    else
+        echo "$name : Removed"
     fi
 
     # Remove machine from active hosts

@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-# FILES
-HOSTS="/etc/hosts"
-FILES_FOLDER="$HOME/.ansible-vagrant-lemp.d/"
-VBOX="$FILES_FOLDER/box"
-DEL_VBOX="$FILES_FOLDER/del_vbox"
+# Variable definitions
+. {ENV_LOCATION}
 
 # Check if user is root or no
 if [ "$EUID" -ne 0 ]
@@ -12,13 +9,11 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-# Update IFS
-OIFS=$IFS
-IFS='\n'
-
 # Files creation if isn't exists
 touch "$VBOX"
 touch "$DEL_VBOX"
+chmod 777 "$VBOX"
+chmod 777 "$DEL_VBOX"
 
 # Add new vbox to host file
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -35,6 +30,3 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     sed -i "/$name$/d" "$HOSTS"
     sed -i "/$name$/d" "$DEL_VBOX"
 done < "$DEL_VBOX"
-
-# Reset IFS
-IFS="$OIFS"

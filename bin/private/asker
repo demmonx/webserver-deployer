@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# 1 = no, 0 => yes
+function choice() {
+    while :; do
+        read -p "$1 ? [y/n] => " res
+        if [[ -z "$res" ]]; then
+            continue
+        fi
+
+        case "$res" in
+            [yYoO]*)
+                 exit 0;;
+            [nN]*) 
+                exit 1;;
+            *) continue
+        esac 
+    done
+} 
+
+choice "$1"

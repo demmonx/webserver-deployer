@@ -1,0 +1,41 @@
+---
+# GENERAL conf
+webserver_daemon: nginx
+webserver_user: "nginx"
+web_folder: "/web"
+# END GENERAL conf
+
+# PHP conf
+php_packages:
+  - php-gd
+  - php-imap
+  - php-ldap
+  - php-mbstring
+  - php-pdo
+  - php-pear
+  - php-xml
+  - php-xmlrpc
+  - php-pgsql
+  - php-imagick
+# END PHP conf
+
+# DB conf
+db_name: {DB_NAME}
+db_user: {DB_USER}
+db_pass: {DB_PASS}
+# END DB conf
+
+# NGINX conf
+nginx_workers_con: 4096
+nginx_workers_nb: 1
+# END NGINX conf
+
+# SMTP conf
+smtp_host: {SMTP_HOST}
+smtp_user: {SMTP_USER}
+smtp_pass: {SMTP_PASS}
+# END SMTP conf
+
+# GIT conf
+git_repo: {GIT_REPO}
+# END GIT conf
