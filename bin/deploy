@@ -43,6 +43,7 @@ for name in $@; do
 
     # Install and deploy VM
     previous_folder=$(pwd)
+    echo "------ RUNNING DEPLOYMENT "
     cd "$VAGRANT_USER_FOLDER"
     vagrant up
 

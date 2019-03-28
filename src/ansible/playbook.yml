@@ -13,5 +13,5 @@
     - ansible_role_postgres
     - ansible_role_adminer
     - ansible_role_postfix
-    - ansible_role_symfony
+    - ansible_role_composer
     

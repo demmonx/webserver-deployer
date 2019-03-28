@@ -20,9 +20,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 
     # Process
     export ANSIBLE_HOST_KEY_CHECKING=False
-    ansible-playbook "$ANSIBLE_PLAYBOOK" --inventory-file="$ANSIBLE_INVENTORY"
+    ansible-playbook "$ANSIBLE_PLAYBOOK_LOCAL" --inventory-file="$ANSIBLE_INVENTORY_LOCAL"
 
-    #bIn Clean conf
+    # Clean conf
     {BIN_PRIVATE}/clean-conf
 
 done < "$VBOX"

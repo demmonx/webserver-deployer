@@ -13,6 +13,6 @@ git:
   repo: https://github.com/Microsoft/project-html-website
 
 db:
-  db: madb
+  name: madb
   user: monuser
   pass: azerty123

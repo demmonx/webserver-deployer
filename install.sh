@@ -7,6 +7,7 @@
 # Load git submodules
 echo "$@" | grep -- "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
+    echo ""
     submodule update --init --recursive
 else
     bin/private/asker "Load submodules"
@@ -57,8 +58,8 @@ source "$HOME/.bashrc"
 echo "$@" | grep -- "--debug" > /dev/null
 if [[ $? -eq 0 ]]; then
     echo "--- DEBUG MODE ENABLED ---"
-    echo "192.168.2.50  machine" > "$VBOX"
-    cp "example/machine.yml" "$CONF/192.168.2.50"
+    echo "192.168.2.51  machineb" > "$VBOX"
+    cp "example/machine.yml" "$CONF/192.168.2.51"
 fi
 
 # Show next instructions
