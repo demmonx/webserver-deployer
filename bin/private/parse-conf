@@ -203,3 +203,8 @@ sed -i "s/{DB_PASS}/$db_pass/g"  "$ANSIBLE_VARS_LOCAL"
 sed -i "s/{SMTP_HOST}/$smtp_host/g"  "$ANSIBLE_VARS_LOCAL"
 sed -i "s/{SMTP_USER}/$smtp_user/g"  "$ANSIBLE_VARS_LOCAL"
 sed -i "s/{SMTP_PASS}/$smtp_pass/g"  "$ANSIBLE_VARS_LOCAL"
+
+# Replace souce file by absolute path
+sed -i "s@{ANSIBLE_PLAYBOOK}@$ANSIBLE_PLAYBOOK_LOCAL@" "$VAGRANT_FILE_LOCAL"
+sed -i "s@{ANSIBLE_INVENTORY}@$ANSIBLE_INVENTORY_LOCAL@" "$VAGRANT_FILE_LOCAL"
+sed -i "s@{ANSIBLE_VARS}@$ANSIBLE_VARS_LOCAL@" "$ANSIBLE_PLAYBOOK_LOCAL"

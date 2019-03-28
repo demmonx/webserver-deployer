@@ -44,7 +44,7 @@ for name in $@; do
 
     # Install and deploy VM
     previous_folder=$(pwd)
-    cd "$VAGRANT_FOLDER"
+    cd "$VAGRANT_USER_FOLDER"
     vagrant up
 
     # Stop if error
