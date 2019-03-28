@@ -82,11 +82,11 @@ function nonEmptyVal() {
 
 # Install postgres config
 function setupDB() {
-    echo "postgres:" >> "$file"
+    echo "db:" >> "$file"
 
     # Database name
     var=$(nonEmptyVal "Database")
-    echo "  db: $var" >> "$file"
+    echo "  name: $var" >> "$file"
 
     # Username
     var=$(nonEmptyVal "User")
@@ -103,7 +103,7 @@ function setupSMTP() {
 
     # Host name
     var=$(nonEmptyVal "Host")
-    echo "  db: $var" >> "$file"
+    echo "  host: $var" >> "$file"
 
     # Username
     var=$(nonEmptyVal "User")
