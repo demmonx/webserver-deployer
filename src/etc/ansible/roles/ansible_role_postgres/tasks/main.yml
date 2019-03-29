@@ -1,0 +1,11 @@
+---
+# tasks files for postgres
+- include_tasks: install.yml
+
+- include_tasks: configure.yml
+  when: db_user is defined and db_pass is defined and db_name is defined
+
+
+
+
+

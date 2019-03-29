@@ -1,0 +1,7 @@
+---
+# defaults file for ansible_role_postfix
+
+postfix_service_state: started
+postfix_service_enabled: true
+postfix_restarted_state: "restarted"
+postfix_daemon: postfix

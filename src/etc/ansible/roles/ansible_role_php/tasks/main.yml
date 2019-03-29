@@ -1,0 +1,6 @@
+---
+# tasks files for php
+
+- include_tasks: install.yml
+
+- include_tasks: configure.yml

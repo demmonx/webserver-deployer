@@ -4,6 +4,9 @@
 # Base folder
 . .env
 
+# Change access right
+chmod -R 774 "bin"
+
 # Load git submodules
 echo "$@" | grep -- "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
@@ -27,11 +30,11 @@ mkdir -p "$ROOT" "$BIN"  "$SBIN" "$ETC" "$TMP" "$CONF"
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
-cp -r bin/* "$BIN"
-cp -r sbin/* "$SBIN"
+cp -r src/bin/* "$BIN"
+cp -r src/sbin/* "$SBIN"
 
 # Copy src to /etc/lemp-manager
-cp -r src/* "$ETC"
+cp -r src/etc/* "$ETC"
 
 # Edit filenames
 for f in $(find $BIN $SBIN -maxdepth 1 -type f); do 
@@ -52,11 +55,10 @@ done
 # Change access right
 chmod -R 775 "$ROOT"
 chmod -R 774 "$SBIN"
-chown -R root:root "$SBIN"
 
 # Add bin to .bashrc
 echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
-echo "secure_path=\$secure_path:$SBIN" >> "$HOME/.bashrc"
+echo "PATH=\$PATH:$SBIN" >> "$HOME/.bashrc"
 
 # DEBUG ONLY
 echo "$@" | grep -- "--debug" > /dev/null

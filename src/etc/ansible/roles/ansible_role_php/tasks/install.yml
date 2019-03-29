@@ -1,0 +1,43 @@
+---
+- name: Install PHP dependencies
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: latest
+  with_items:
+    - zip
+    - unzip
+  tags: packages
+
+- name: Install PHP 7.2
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - php
+    - php-cli
+    - php-fpm
+    - php-common
+  tags: packages
+
+- name: Install PHP 7.2 additionnal packages
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - "{{ php_packages }}"
+  tags: packages
+
+- name: Ensure the nginx service is running
+  service: 
+    name: "{{ webserver_daemon }}"
+    state: started 
+    enabled: yes
+
+- name: Ensure the php7.2-fpm service is running
+  service: 
+    name: "{{ php_service_name }}"
+    state: started 
+    enabled: yes

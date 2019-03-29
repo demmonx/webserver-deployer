@@ -1,0 +1,9 @@
+---
+- name: Install GIT
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - git
+  tags: packages

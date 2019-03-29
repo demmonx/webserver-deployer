@@ -1,0 +1,13 @@
+---
+- name: Find files w/o adminer
+  find:
+    paths: "{{ web_folder }}"
+    patterns: "*"
+  exclude: "adminer"
+  register: files_to_delete
+
+- name: remove files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"

@@ -1,0 +1,26 @@
+---
+dependencies:
+  - ansible_role_nginx
+  - ansible_role_php
+  - ansible_role_composer
+  - ansible_role_postgres
+  - ansible_role_postfix
+
+galaxy_info:
+  author: demmonx
+  description: Git Deployer for RedHat/CentOS/Fedora/Debian/Ubuntu.
+  company: ""
+  license: "license ( MIT)"
+  min_ansible_version: 2.4
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+        - bionic
+  galaxy_tags:
+    - development
+    - git

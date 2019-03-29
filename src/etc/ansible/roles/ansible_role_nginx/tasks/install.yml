@@ -1,0 +1,24 @@
+---
+- name: Install dependencies and ensure they're here
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: latest
+  with_items:
+    - curl
+  tags: packages
+
+- name: Install nginx
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - nginx
+  tags: packages
+
+- name: Ensure nginx is restarted
+  service:
+    name: "{{ nginx_daemon }}"
+    state: "started"
+    enabled: "true"

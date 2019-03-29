@@ -1,0 +1,38 @@
+---
+
+- name: "Create folder {{ web_folder }}"
+  file:
+    path: "{{ web_folder }}"
+    recurse: yes
+    state: directory
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_user }}"
+    mode: 0775
+
+- name: Clone {{ repo }} inside {{ web_folder }}
+  shell: git clone "{{ git_repo }}"
+  args:
+    chdir:  "{{ web_folder }}"
+
+- name: Get workspace basename
+  shell: basename {{ git_repo }}
+  register: folder_name
+
+- name: Copy repo content inside {{ web_folder }}
+  shell: cp -r "{{ folder_name.stdout }}"/* .
+  args:
+    chdir: "{{ web_folder }}"
+
+- name: "Change access right folder {{ web_folder }}"
+  file:
+    path: "{{ web_folder }}"
+    recurse: yes
+    state: directory
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_user }}"
+    mode: 0775
+
+- name: "Remove useless folder"
+  file:
+    path: "{{ folder_name.stdout }}"
+    state: absent

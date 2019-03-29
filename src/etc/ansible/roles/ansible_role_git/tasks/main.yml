@@ -1,0 +1,9 @@
+---
+# tasks files for git deployer
+- include_tasks: install.yml
+
+- include_tasks: clear.yml
+  when: git_repo is defined
+
+- include_tasks: deploy.yml
+  when: git_repo is defined

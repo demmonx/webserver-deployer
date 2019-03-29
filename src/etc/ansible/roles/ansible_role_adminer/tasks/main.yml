@@ -1,0 +1,3 @@
+---
+# tasks files for adminer
+- include_tasks: install.yml

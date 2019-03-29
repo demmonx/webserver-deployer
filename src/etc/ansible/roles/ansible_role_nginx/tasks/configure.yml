@@ -1,0 +1,49 @@
+---
+- name: Ensure group "webserver_user" exists
+  group:
+    name: "{{ webserver_user }}"
+    state: present
+
+- name: Ensure user "webserver_user" exists
+  user:
+    name: "{{ webserver_user }}"
+    state: present
+    groups: "{{ webserver_user }}"
+    create_home: no
+    append: yes
+
+- name: "Create folder {{ web_folder }}"
+  file:
+    path: "{{ web_folder }}"
+    recurse: yes
+    state: directory
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_user }}"
+    mode: 0775
+
+- name: "Create log folder {{ web_folder }}"
+  file:
+    path: "/usr/share/nginx/logs"
+    recurse: yes
+    state: directory
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_user }}"
+    mode: 0775  
+
+- name: Edit nginx conf file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0775
+
+- name: Place welcome page
+  copy:
+    src: index.html
+    dest: "{{ web_folder }}/index.html"
+    mode: 0775
+
+- name: Ensure nginx is restarted
+  service:
+    name: "{{ nginx_daemon }}"
+    state: "restarted"
+    enabled: "true"

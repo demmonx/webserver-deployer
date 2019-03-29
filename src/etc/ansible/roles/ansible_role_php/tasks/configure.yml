@@ -1,0 +1,26 @@
+---
+
+
+- name: Edit php-fpm.conf file
+  template:
+    src: php-fpm.j2
+    dest: /etc/php/7.0/fpm/pool.d/www.conf 
+    mode: 0775
+
+- name: Edit php.ini file
+  copy:
+    src: php.ini
+    dest: /etc/php/7.0/fpm/php.ini
+    mode: 0775
+
+- name: Ensure nginx is restarted
+  service:
+    name: "{{ webserver_daemon }}"
+    state: "restarted"
+    enabled: "true"
+
+- name: Ensure phpfpm is restarted
+  service:
+    name: "{{ php_service_name }}"
+    state: "restarted"
+    enabled: "true"

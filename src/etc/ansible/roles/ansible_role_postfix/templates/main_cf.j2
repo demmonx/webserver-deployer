@@ -1,0 +1,16 @@
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+relayhost = [{{ smtp_host }}]:587
+smtp_sasl_security_options =
+smtp_use_tls = yes
+smtpd_use_tls=yes
+smtpd_tls_security_level = may
+smtp_tls_security_level = may 
+smtpd_tls_received_header = yes
+smtpd_tls_ask_ccert = yes
+smtpd_tls_loglevel = 1 
+
+smtpd_tls_cert_file = /etc/postfix/server.pem
+smtpd_tls_key_file = $smtpd_tls_cert_file
+
+

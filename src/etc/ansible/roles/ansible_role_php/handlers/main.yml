@@ -1,0 +1,8 @@
+---
+# handlers file for ansible_role_nginx
+
+- name: restart php7
+  service:
+    name: "{{ php_service_name }}"
+    state: "restarted"
+    sleep: 5

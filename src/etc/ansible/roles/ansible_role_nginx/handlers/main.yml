@@ -1,0 +1,8 @@
+---
+# handlers file for ansible_role_nginx
+
+- name: restart nginx
+  service:
+    name: "{{ nginx_daemon }}"
+    state: "restarted"
+    sleep: 5

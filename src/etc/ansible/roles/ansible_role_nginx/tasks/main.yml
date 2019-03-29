@@ -1,0 +1,5 @@
+---
+# tasks files for git deployer
+- include_tasks: install.yml
+
+- include_tasks: configure.yml

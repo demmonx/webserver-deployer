@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Variable definitions
+. {ENV_LOCATION}
+
+# Check if user is root or no
+if [ "$EUID" -ne 0 ]
+  then echo "You need to be root to edit /etc/hosts !"
+  exit
+fi
+
+# Add new vbox to host file
+if [[ -f "$VBOX" ]]; then 
+    while IFS='' read -r line || [[ -n "$line" ]]; do
+        name=$(echo "$line" | awk '{print $2}')
+        cat "$HOSTS" | grep "$name$" > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "$line" >> "$HOSTS"
+        fi
+    done < "$VBOX"
+fi
+
+# Remove deleted vbox
+if [[ -f "$DEL_VBOX" ]]; then 
+    while IFS='' read -r line || [[ -n "$line" ]]; do
+        name=$(echo "$line" | awk '{print $1}')
+        sed -i "/$name$/d" "$HOSTS"
+        sed -i "/$name$/d" "$DEL_VBOX"
+    done < "$DEL_VBOX"
+fi

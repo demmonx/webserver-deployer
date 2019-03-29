@@ -1,0 +1,8 @@
+---
+# handlers file for ansible_role_postfix
+
+- name: restart postfix
+  service:
+    name: "{{ postfix_daemon }}"
+    state: "{{ postfix_restarted_state }}"
+    sleep: 5

@@ -1,0 +1,3 @@
+---
+# tasks files for composer
+- include_tasks: install.yml

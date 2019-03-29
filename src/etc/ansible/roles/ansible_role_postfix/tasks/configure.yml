@@ -1,0 +1,48 @@
+
+
+- name: use template in send_relay
+  template:
+    src: main_cf.j2
+    dest: /etc/postfix/main.cf
+    mode: 0600
+
+- name: use template in sasl_passwd  
+  template:
+    src: sasl_passwd.j2
+    dest: /etc/postfix/sasl_passwd
+    mode: 0600
+
+- name: hash pass file
+  shell: postmap /etc/postfix/sasl_passwd   
+
+- name: "Secure password files"
+  file:
+    path: '{{ item }}'
+    group: root
+    owner: root 
+    mode: 0600
+  with_items:
+    - /etc/postfix/sasl_passwd
+    - /etc/postfix/sasl_passwd.db
+
+- name: "Edition certificat"
+  shell: openssl req -new -x509 -days 3650 -nodes -out /etc/ssl/certs/postfix.pem -keyout /etc/ssl/private/postfix.pem -subj "/C=FR/ST=Paris/L=Paris/O=Acme Inc. /OU=IT Department/CN=acme.com"
+
+- name: "Copy certif files"
+  copy:
+    src: /etc/ssl/certs/postfix.pem
+    dest: /etc/postfix/server.pem
+    remote_src: yes
+
+- name: "Secure certif files"
+  file:
+    path: /etc/postfix/server.pem
+    group: postfix
+    owner: postfix 
+    mode: 0640
+
+- name: Ensure Postfix is restarted
+  service:
+    name: "{{ postfix_daemon }}"
+    state: "restarted"
+    enabled: "true"

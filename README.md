@@ -29,7 +29,7 @@ You can run directly `webserver-deployer` or use modules `webserver-deployer-<mo
 | `webserver-deployer start <name1> [<name2> ...]` | Start VMs | Working
 | `webserver-deployer update` | Update installed VMs | Working
 | `webserver-deployer list` | List installed VMs | Working
-| `webserver-deployer update-hosts` | Update /etc/hosts (as root) | Working ~~ Trouble with acces right / PATH
+| `sudo env "PATH=$PATH" "HOME=$HOME" webserver-deployer update-hosts` | Update /etc/hosts (root only)| Working
 | `webserver-deployer remove <name1> [<name2> ...]` | Delete VMs | Working
 | `webserver-deployer help` | Show available commands | Working
 
@@ -41,7 +41,7 @@ Next run : `webserver-deployer deploy <file1> [<file2> ...]`
 ### Update hosts file (root only)
 Update `/etc/hosts` to match existing VM and delete old VMs, in order to access them by using `http://{server name}/` instead of `http://{ip}/`wl, same for SSH (password = `vargant`)
 You need to be root in order to run this command : 
-`webserver-deployer update-hosts`
+`sudo env "PATH=$PATH" "HOME=$HOME" webserver-deployer update-hosts`
 
 ### Delete VMs 
 You could delete on or more VMs using : 

@@ -1,0 +1,6 @@
+---
+# tasks files for postfix
+- include_tasks: install.yml
+
+- include_tasks: configure.yml
+  when: smtp_host is defined and smtp_pass is defined and smtp_user is defined

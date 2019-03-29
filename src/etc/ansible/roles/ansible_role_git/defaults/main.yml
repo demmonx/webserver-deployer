@@ -1,0 +1,2 @@
+web_folder: /var/www/html
+webserver_user: www-data

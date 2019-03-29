@@ -1,0 +1,29 @@
+---
+# tasks file for ansible_role_postfix
+- name: Ensure packages are the latest versions
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: latest
+  with_items:
+    - libsasl2-modules
+    - mailutils
+    - ca-certificates
+    - libsasl2-2
+
+  tags: packages
+
+- name: Install Postfix
+  apt: 
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - postfix
+  tags: packages
+
+- name: Ensure Postfix is started and enabled on boot.
+  service:
+    name: "{{ postfix_daemon }}"
+    state: "started"
+    enabled: "true"
