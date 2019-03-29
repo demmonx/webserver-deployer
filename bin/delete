@@ -13,6 +13,9 @@ if [[ $# -eq 0 ]]; then # Error, no args provided
     exit 1
 fi
 
+# Create file if it's not exist
+touch "$DEL_VBOX"
+
 # Check all the machines
 for name in $@; do
     # Check machine name

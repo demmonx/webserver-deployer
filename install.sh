@@ -8,7 +8,7 @@
 echo "$@" | grep -- "--roles" > /dev/null
 if [[ $? -eq 0 ]]; then
     echo ""
-    #git submodule update --init --recursive
+    git submodule update --init --recursive
 else
     bin/private/asker "Load submodules"
     if [[ $? -eq 0 ]]; then
@@ -21,21 +21,23 @@ rm -rf "$ROOT"
 sed -i "/$MODULE_NAME/d" "$HOME/.bashrc"
 
 # Create root folders
-mkdir -p "$ROOT" "$BIN" "$ETC" "$TMP" "$CONF"
+mkdir -p "$ROOT" "$BIN"  "$SBIN" "$ETC" "$TMP" "$CONF"
 
 # Copy env to ROOT
 cp .env "$ROOT"
 
 # Copy <bin> to ROOT, and prefix with module name
 cp -r bin/* "$BIN"
+cp -r sbin/* "$SBIN"
 
 # Copy src to /etc/lemp-manager
 cp -r src/* "$ETC"
 
 # Edit filenames
-for f in $(find $BIN -maxdepth 1 -type f); do 
+for f in $(find $BIN $SBIN -maxdepth 1 -type f); do 
+    folder=${f%/*}
     name=$(basename $f)
-    mv -- "$f" "$BIN/$MODULE_NAME-$name" ; 
+    mv -- "$f" "$folder/$MODULE_NAME-$name" ; 
 done
 mv "$BIN/$MODULE_NAME-main" "$BIN/$MODULE_NAME"
 
@@ -48,11 +50,13 @@ for file in $(find $ROOT -not \( -path $ANSIBLE_ROLES -prune \) -type f); do
 done
 
 # Change access right
-chmod -R 755 "$ROOT"
+chmod -R 775 "$ROOT"
+chmod -R 774 "$SBIN"
+chown -R root:root "$SBIN"
 
 # Add bin to .bashrc
 echo "PATH=\$PATH:$BIN" >> "$HOME/.bashrc"
-source "$HOME/.bashrc"
+echo "secure_path=\$secure_path:$SBIN" >> "$HOME/.bashrc"
 
 # DEBUG ONLY
 echo "$@" | grep -- "--debug" > /dev/null
