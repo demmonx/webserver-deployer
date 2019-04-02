@@ -5,18 +5,23 @@
 . .env
 
 # Change access right
-chmod -R 774 "bin"
+chmod -R 774 "src/bin" "src/sbin"
 
-# Load git submodules
-echo "$@" | grep -- "--roles" > /dev/null
-if [[ $? -eq 0 ]]; then
-    echo ""
-    git submodule update --init --recursive
-else
-    bin/private/asker "Load submodules"
+# Load git submodules if we aren't in debug mode
+echo "$@" | grep -- "--debug" > /dev/null
+if [[ $? -ne 0 ]]; then
+    echo "$@" | grep -- "--roles" > /dev/null
     if [[ $? -eq 0 ]]; then
+        echo ""
         git submodule update --init --recursive
+    else
+        src/bin/private/asker "Load submodules"
+        if [[ $? -eq 0 ]]; then
+            git submodule update --init --recursive
+        fi
     fi
+else
+    echo "--- DEBUG MODE ENABLED ---"
 fi
 
 # Remove previous install
@@ -63,7 +68,6 @@ echo "PATH=\$PATH:$SBIN" >> "$HOME/.bashrc"
 # DEBUG ONLY
 echo "$@" | grep -- "--debug" > /dev/null
 if [[ $? -eq 0 ]]; then
-    echo "--- DEBUG MODE ENABLED ---"
     echo "192.168.2.51  machineb" > "$VBOX"
     cp "example/machine.yml" "$CONF/192.168.2.51"
 fi
